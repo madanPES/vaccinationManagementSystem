@@ -1,578 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .sidebar { height: 100vh; width: 250px; position: fixed; top: 0; left: 0; background-color: #f8f9fa; padding-top: 20px; }
-        .sidebar a { padding: 10px 15px; text-decoration: none; font-size: 18px; color: #333; display: block; }
-        .sidebar a:hover { background-color: #007bff; color: white; }
-        .main-content { margin-left: 250px; padding: 20px; }
-        .navbar .dropdown-menu { right: 0; left: auto; }
-        .profile-icon { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        #scheduleForm, #vaccinationHistory { display: none; }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Login - Vaccination Management System</title>
+		<!-- Bootstrap CSS -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
 
+		<style>
+			body {
+				background-color: #f8f9fa;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
 
-    </style>
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Vaccination Management</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Support</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="./images/user-icon-2046x2048-9pwm22pp.png" alt="Profile" class="profile-icon">
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">My Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a id="logoutButton" class="dropdown-item" href="#">Logout</a></li>
+			.login-card {
+				border-radius: 15px;
+				padding: 30px;
+				max-width: 400px;
+				width: 100%;
+			}
 
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+			.form-control {
+				border-radius: 10px;
+			}
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <a href="#" onclick="showScheduleForm()">Schedule Vaccination</a>
-        <a href="#" onclick="showVaccinationHistory()">See Vaccination History</a>
-        <a href="#" onclick="showScheduledAppointments()">Scheduled Appointments</a>
-    </div>
+			.btn-custom {
+				background-color: #007bff;
+				color: white;
+				border-radius: 10px;
+			}
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div id="welcome">
-            <h2 id="welcomeMessage">Welcome, </h2>
-            <p>Here you can manage your vaccination, view your infection and vaccination history, and check your appointments.</p>
-        </div>
-        
+			.btn-custom:hover {
+				background-color: #0056b3;
+			}
 
-        <!-- Modify the Schedule Vaccination Form section in your existing HTML -->
-        <div id="scheduleForm">
-            <h3>Schedule Vaccination</h3>
-            <form id="appointmentForm">
-                <div class="mb-3">
-                    <label for="vaccineSelect" class="form-label">Select Vaccine</label>
-                    <select class="form-select" id="vaccineSelect" required>
-                        <option selected disabled>Choose...</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="facilitySelect" class="form-label">Select Facility</label>
-                    <select class="form-select" id="facilitySelect" required>
-                        <option selected disabled>Choose...</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="healthWorkerSelect" class="form-label">Select Health Worker</label>
-                    <select class="form-select" id="healthWorkerSelect" required>
-                        <option value = "none" selected>No Preference</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="appointmentDate" class="form-label">Select Date</label>
-                    <input type="date" class="form-control" id="appointmentDate" required>
-                </div>
-                <div class="mb-3">
-                    <label for="timeSlotSelect" class="form-label">Preferred Time Slot</label>
-                    <select class="form-select" id="timeSlotSelect" required>
-                        <option selected disabled>Choose...</option>
-                        <option value="morning">Morning (8:00 AM - 12:00 PM)</option>
-                        <option value="afternoon">Afternoon (12:00 PM - 4:00 PM)</option>
-                        <option value="evening">Evening (4:00 PM - 8:00 PM)</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="comments" class="form-label">Additional Comments (optional)</label>
-                    <textarea class="form-control" id="comments" rows="3"></textarea>
-                </div>
-                <div id="error-message" style="color: red; margin-bottom: 10px;"></div>
-                <button type="submit" class="btn btn-primary">Book Appointment</button>
-            </form>
-        </div>
+			.login-title {
+				font-size: 1.5rem;
+				font-weight: bold;
+			}
+		</style>
+	</head>
 
-        <!-- Vaccination History -->
-<div id="vaccinationHistory">
-    <h3>Your Vaccinations</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Record ID</th>
-                <th>Date</th>
-                <th>Health Worker</th>
-                <th>Vaccine Name</th>
-                <th>Dose Given</th>
-                <th>Batch Number</th>
-            </tr>
-        </thead>
-        <tbody id="vaccinationHistoryBody">
-            <!-- Rows will be dynamically populated here -->
-        </tbody>
-    </table>
-</div>
-        <!-- Scheduled Appointments -->
-        <div id="scheduledAppointments" style="display: none;">
-            <h3>Your Scheduled Appointments</h3>
-            <div id="appointmentsTableContainer">
-                <table id="appointmentsTable" class="table table-striped table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Appointment ID</th>
-                            <th>Date</th>
-                            <th>Facility</th>
-                            <th>Health Worker</th>
-                            <th>Vaccine</th>
-                            <th>Time Slot</th>
-                            <th>Status</th>
-                            <th>Comments</th>
-                        </tr>
-                    </thead>
-                    <tbody id="appointmentsTableBody">
-                        <!-- Rows will be populated here -->
-                    </tbody>
-                </table>
-            </div>
-            
-        </div>
-    </div>
+	<body>
+		<div class="card login-card shadow-sm">
+			<div class="card-body">
+				<h3 class="text-center login-title mb-4">Login</h3>
 
-    
+				<!-- Form for login -->
+				<form id="loginForm">
+					<div class="mb-3">
+						<label for="email" class="form-label"
+							>Email address</label
+						>
+						<input
+							type="email"
+							class="form-control"
+							id="email"
+							name="email"
+							placeholder="Enter your email"
+							required
+						/>
+					</div>
 
-<!-- Profile Modal -->
-<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="profileModalLabel">Edit Profile</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="profileForm">
-                    <div class="mb-3">
-                        <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="firstName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="dateOfBirth" class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control" id="dateOfBirth" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="gender" class="form-label">Gender</label>
-                        <select class="form-select" id="gender" required>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="phoneNumber" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="phoneNumber" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="address">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveProfileButton">Save Changes</button>
-            </div>
-        </div>
-    </div>
-</div>
+					<div class="mb-3">
+						<label for="password" class="form-label"
+							>Password</label
+						>
+						<input
+							type="password"
+							class="form-control"
+							id="password"
+							name="password"
+							placeholder="Enter your password"
+							required
+						/>
+					</div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+					<button type="submit" class="btn btn-custom w-100">
+						Login
+					</button>
+				</form>
 
-    <!-- Script to toggle between sections -->
-    <script>
+				<!-- Link to Registration for Patients -->
+				<div class="text-center mt-3">
+					<p>
+						Don't have an account?
+						<a href="patient-registration.html"
+							>Register as a patient</a
+						>
+					</p>
+				</div>
+			</div>
+		</div>
 
-        let patientId;
-        function showScheduleForm() {
-            document.getElementById('scheduleForm').style.display = 'block';
-            document.getElementById('vaccinationHistory').style.display = 'none';
-            document.getElementById('scheduledAppointments').style.display = 'none';
-            document.getElementById('welcome').style.display = 'none';
-        }
+		<!-- Bootstrap JS -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-        function showVaccinationHistory() {
-            document.getElementById('scheduleForm').style.display = 'none';
-            document.getElementById('vaccinationHistory').style.display = 'block';
-            document.getElementById('scheduledAppointments').style.display = 'none';
-            document.getElementById('welcome').style.display = 'none';
-        }
+		<!-- Custom JavaScript for login and redirection -->
+		<script>
+			// Add event listener for form submission
+			document
+				.getElementById("loginForm")
+				.addEventListener("submit", async function (event) {
+					event.preventDefault(); // Prevent default form submission
 
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchVaccines();
-        });
+					// Get form data
+					const email = document.getElementById("email").value.trim();
+					const password = document
+						.getElementById("password")
+						.value.trim();
 
-        function fetchVaccines() {
-            fetch('http://localhost:3000/vaccines')
-                .then(response => response.json())
-                .then(data => {
-                    const vaccineSelect = document.getElementById('vaccineSelect');
-                    vaccineSelect.innerHTML = '<option selected disabled>Choose...</option>';
-                    data.forEach(vaccine => {
-                        let option = document.createElement('option');
-                        option.value = vaccine.vaccine_id;
-                        option.text = vaccine.vaccine_name;
-                        vaccineSelect.add(option);
-                    });
-                })
-                .catch(error => console.error('Error fetching vaccines:', error));
-        }
+					try {
+						// Send POST request to login endpoint
+						const response = await fetch(
+							"http://localhost:3000/login",
+							{
+								method: "POST",
+								headers: {
+									"Content-Type": "application/json",
+								},
+								body: JSON.stringify({ email, password }),
+							}
+						);
 
-        // Event listener for vaccine selection to fetch facilities
-        document.getElementById('vaccineSelect').addEventListener('change', function() {
-            const selectedVaccineId = this.value;
-            fetchFacilitiesByVaccine(selectedVaccineId);
-        });
+						const data = await response.json();
 
-        function fetchFacilitiesByVaccine(vaccineId) {
-    fetch(`http://localhost:3000/facilities?vaccine_id=${vaccineId}`)
-        .then(response => response.json())
-        .then(data => {
-            const facilitySelect = document.getElementById('facilitySelect');
-            facilitySelect.innerHTML = '<option selected disabled>Choose...</option>';
+						if (response.ok) {
+							// Login successful
+							localStorage.setItem(
+								"patient_id",
+								data.user.patient_id
+							);
+							window.location.href = "patient.html"; // Redirect to patient dashboard
+						} else {
+							// Display error message on the frontend
+							displayErrorMessage(
+								data.message ||
+									"Login failed. Please try again."
+							);
+						}
+					} catch (error) {
+						console.error("Error during login:", error);
+						displayErrorMessage(
+							"An error occurred. Please try again later."
+						);
+					}
+				});
 
-            // Create a Set to track unique facility IDs
-            const uniqueFacilities = new Set();
-
-            data.forEach(facility => {
-                if (!uniqueFacilities.has(facility.facility_id)) {
-                    uniqueFacilities.add(facility.facility_id);
-                    const option = document.createElement('option');
-                    option.value = facility.facility_id;
-                    option.text = facility.facility_name;
-                    facilitySelect.add(option);
-                }
-            });
-        })
-        .catch(error => console.error('Error fetching facilities:', error));
-}
-
-
-
-        // Fetch health workers based on the selected facility
-        document.getElementById('facilitySelect').addEventListener('change', function() {
-            const selectedFacilityId = this.value;
-            fetchHealthWorkersByFacility(selectedFacilityId);
-        });
-
-        function fetchHealthWorkersByFacility(facilityId) {
-            fetch(`http://localhost:3000/health-workers?facility_id=${facilityId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const healthWorkerSelect = document.getElementById('healthWorkerSelect');
-                    healthWorkerSelect.innerHTML = '<option value="none" selected>No Preference</option>'; // Reset with "No Preference"
-                    data.forEach(worker => {
-                        let option = document.createElement('option');
-                        option.value = worker.health_worker_id; // Assuming health_worker_id is the ID of the health worker
-                        option.text = `${worker.first_name} ${worker.last_name}`; // Display full name
-                        healthWorkerSelect.add(option);
-                    });
-                })
-                .catch(error => console.error('Error fetching health workers:', error));
-        }
-
-        // Event listener for form submission
-// Event listener for form submission
-// Event listener for form submission
-document.getElementById('appointmentForm').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    // Gather form data
-    const vaccineId = document.getElementById('vaccineSelect').value;
-    const facilityId = document.getElementById('facilitySelect').value;
-    let healthWorkerId = document.getElementById('healthWorkerSelect').value;
-    const appointmentDate = document.getElementById('appointmentDate').value;
-    const timeSlot = document.getElementById('timeSlotSelect').value;
-    const comments = document.getElementById('comments').value;
-
-    // Get the current date in YYYY-MM-DD format
-    const today = new Date();
-    const currentDateString = today.toISOString().split('T')[0];
-
-    // Reference to the error message div
-    const errorMessageDiv = document.getElementById('error-message');
-
-    // Check if the appointment date is in the past
-    if (appointmentDate < currentDateString) {
-        errorMessageDiv.textContent = 'Appointment date cannot be in the past. Please select a valid date.';
-        return; // Stop form submission
-    }
-
-    // Handle "No Preference" for health worker selection
-    if (healthWorkerId === 'none') {
-        try {
-            console.log(facilityId);
-            // Updated fetch request to use route parameter
-            const response = await fetch(`http://localhost:3000/health-worker/least-appointments/${facilityId}`);
-            const data = await response.json();
-            
-            if (data.healthWorkerId) {
-                healthWorkerId = data.healthWorkerId; // Assign the least busy health worker
-                console.log(`Assigned Health Worker ID: ${data.healthWorkerId}`);
-            } else {
-                errorMessageDiv.textContent = 'No available health workers. Please try again later.';
-                return; // Stop form submission
-            }
-        } catch (error) {
-            console.error('Error fetching least busy health worker:', error);
-            errorMessageDiv.textContent = 'An error occurred while assigning a health worker. Please try again.';
-            return; // Stop form submission
-        }
-    }
-
-    // Clear any previous error messages
-    errorMessageDiv.textContent = '';
-
-    // Prepare data to send
-    const appointmentData = {
-        patient_id: patientId,
-        vaccine_id: vaccineId,
-        facility_id: facilityId,
-        health_worker_id: healthWorkerId,
-        appointment_date: appointmentDate,
-        time_slot: timeSlot,
-        comments: comments
-    };
-
-    // Send data to the backend API
-    fetch('http://localhost:3000/appointments', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(appointmentData)
-    })
-    .then(response => {
-        if (response.ok) {
-            document.getElementById('appointmentForm').reset();
-            errorMessageDiv.style.color = 'green';
-            errorMessageDiv.textContent = 'Appointment booked successfully!';
-        } else {
-            errorMessageDiv.textContent = 'Failed to book appointment. Please try again.';
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        errorMessageDiv.textContent = 'An error occurred. Please try again.';
-    });
-});
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-        patientId = localStorage.getItem('patient_id');
-        if (patientId) {
-            console.log('Retrieved Patient ID:', patientId); // Debug statement
-            // You can now use patientId for further operations
-        } else {
-            console.error('No Patient ID found in local storage.'); // Debugging missing ID
-        }
-        if (patientId) {
-            fetch(`http://localhost:3000/patients/${patientId}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Assuming the response contains a patient object with first_name
-                    document.getElementById('welcomeMessage').innerText = `Welcome, ${data.first_name}`;
-                })
-                .catch(error => console.error('Error fetching patient details:', error));
-        }
-
-        // Function to fetch and populate vaccination history
-    async function fetchVaccinationHistory() {
-        try {
-            const response = await fetch(`http://localhost:3000/vaccination-history/${patientId}`);
-            if (!response.ok) throw new Error('Network response was not ok');
-
-            const vaccinationHistory = await response.json();
-            populateVaccinationHistoryTable(vaccinationHistory);
-        } catch (error) {
-            console.error('Error fetching vaccination history:', error);
-        }
-    }
-
-    // Function to populate the table with vaccination history data
-    // Function to populate the table with vaccination history data
-function populateVaccinationHistoryTable(data) {
-    const tableBody = document.getElementById('vaccinationHistoryBody');
-    tableBody.innerHTML = ''; // Clear existing rows
-
-    if (data.length === 0) {
-        const noDataRow = document.createElement('tr');
-        noDataRow.innerHTML = `<td colspan="6" style="text-align: center;">No vaccination records found</td>`;
-        tableBody.appendChild(noDataRow);
-        return;
-    }
-
-    data.forEach(record => {
-        const vaccinationDate = new Date(record.vaccination_date);
-
-        // Adjust to local time zone if necessary
-        const localDate = new Date(vaccinationDate.getTime() - vaccinationDate.getTimezoneOffset() * 60000);
-        
-        // Format the date as "DD-MM-YYYY"
-        const formattedDate = localDate.toISOString().split('T')[0].split('-').reverse().join('-');
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${record.record_id}</td>
-            <td>${formattedDate}</td>
-            <td>${record.health_worker_name}</td>
-            <td>${record.vaccine_name}</td>
-            <td>${record.dose_given}</td>
-            <td>${record.batch_number}</td>
-        `;
-        tableBody.appendChild(row);
-    });
-}
-
-
-
-    // Fetch and populate the vaccination history when the page loads
-    fetchVaccinationHistory();
-    }
-
-
-
-    );
-
-    function showScheduledAppointments() {
-        fetch(`http://localhost:3000/appointments?patient_id=${patientId}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Appointments data:', data); // Debugging appointments data
-                const appointmentsTableBody = document.getElementById('appointmentsTableBody');
-                appointmentsTableBody.innerHTML = ''; // Clear previous data
-                data.sort((a, b) => new Date(a.appointment_date) - new Date(b.appointment_date)); // Sort by date
-                
-                data.forEach(appointment => {
-                    const row = document.createElement('tr');
-                    const appointmentDate = new Date(appointment.appointment_date);
-                    const formattedDate = appointmentDate.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                    });
-                    console.log('Creating row for appointment:', appointment); // Debugging the appointment
-                    
-                    row.innerHTML = `
-                        <td>${appointment.appointment_id}</td>
-                        <td>${formattedDate}</td>
-                        <td>${appointment.facility_name}</td>
-                        <td>${appointment.health_worker_name}</td>
-                        <td>${appointment.vaccine_name}</td>
-                        <td>${appointment.time_slot}</td>
-                        <td>${appointment.status}</td>
-                        <td>${appointment.comments}</td>
-                    `;
-                    appointmentsTableBody.appendChild(row);
-                    console.log('Current table body content:', appointmentsTableBody.innerHTML); // Debugging the table body content
-                });
-                console.log('Scheduled appointments section is visible:', document.getElementById('scheduledAppointments').style.display);
-                document.getElementById('scheduleForm').style.display = 'none';
-                document.getElementById('vaccinationHistory').style.display = 'none';
-                document.getElementById('welcome').style.display = 'none';
-                document.getElementById('scheduledAppointments').style.display = 'block'; // Force show for debugging
-
-            })
-            .catch(error => console.error('Error fetching appointments:', error));
-    }
-
-    document.getElementById("logoutButton").addEventListener("click", function() {
-    // Perform any logout tasks you need, such as clearing session storage or cookies
-    // Example: sessionStorage.clear();  // Clears session data (if needed)
-
-    // Redirect to staff-login.html
-    window.location.href = "patient-login.html";
-});
-
-document.querySelector('.dropdown-item[href="#"]').addEventListener('click', function () {
-        fetch(`http://localhost:3000/patientsUpdate/${patientId}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('firstName').value = data.first_name;
-                document.getElementById('lastName').value = data.last_name;
-                document.getElementById('dateOfBirth').value = data.date_of_birth;
-                document.getElementById('gender').value = data.gender;
-                document.getElementById('phoneNumber').value = data.phone_number;
-                document.getElementById('email').value = data.email;
-                document.getElementById('address').value = data.address;
-                new bootstrap.Modal(document.getElementById('profileModal')).show();
-            })
-            .catch(error => console.error('Error fetching patient details:', error));
-    });
-
-    // Save profile changes
-    document.getElementById('saveProfileButton').addEventListener('click', function () {
-        const updatedData = {
-            first_name: document.getElementById('firstName').value,
-            last_name: document.getElementById('lastName').value,
-            date_of_birth: document.getElementById('dateOfBirth').value,
-            gender: document.getElementById('gender').value,
-            phone_number: document.getElementById('phoneNumber').value,
-            email: document.getElementById('email').value,
-            address: document.getElementById('address').value
-        };
-
-        fetch(`http://localhost:3000/patientsUpdate/${patientId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedData)
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('Profile updated successfully!');
-                    document.getElementById('profileModal').modal('hide');
-                } else {
-                    alert('Failed to update profile. Please try again.');
-                }
-            })
-            .catch(error => console.error('Error updating profile:', error));
-    });
-
-    document.getElementById('healthWorkerSelect').addEventListener('change', function () {
-    const selectedOption = this.value;
-    const facilityId = document.getElementById('facilitySelect').value;
-
-    if (selectedOption === '') { // No Preference selected
-        fetch(`http://localhost:3000/health-worker/least-appointments?facilityId=${facilityId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.healthWorkerId) {
-                    // Automatically assign the least busy health worker
-                    this.value = data.healthWorkerId;
-                    console.log(`Assigned Health Worker ID: ${data.healthWorkerId}`);
-                } else {
-                    console.error('No health workers available.');
-                }
-            })
-            .catch(error => console.error('Error fetching least busy health worker:', error));
-    }
-});
-
-
-    </script>
-</body>
+			// Function to display error messages
+			function displayErrorMessage(message) {
+				let errorElement = document.getElementById("errorMessage");
+				if (!errorElement) {
+					// Create error message element if it doesn't exist
+					errorElement = document.createElement("div");
+					errorElement.id = "errorMessage";
+					errorElement.className = "alert alert-danger mt-3";
+					const form = document.getElementById("loginForm");
+					form.parentNode.insertBefore(
+						errorElement,
+						form.nextSibling
+					);
+				}
+				// Set error message
+				errorElement.textContent = message;
+			}
+		</script>
+	</body>
 </html>
