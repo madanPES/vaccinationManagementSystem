@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    /* Default tab link styles */
+    .nav-link {
+        color: #000 !important; /* Text color for both active and inactive tabs */
+        background-color: transparent !important; /* Transparent background for all tabs */
+        border: 1px solid transparent; /* No border by default */
+        font-weight: normal; /* Regular font weight for inactive tabs */
+        transition: color 0.3s ease, background-color 0.3s ease; /* Smooth color transition */
+    }
+
+    /* Style for active tab */
+    .nav-link.active {
+        background-color: #f0f0f0 !important; /* Light background color for active tab */
+        font-weight: bold; /* Bold text for active tab */
+    }
+
+    /* Hover effect for all tabs */
+    .nav-link:hover {
+        background-color: #f0f0f0 !important; /* Light gray background on hover */
+    }
+
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #333;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .navbar .dropdown-menu {
+            right: 0;
+            left: auto;
+        }
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        #userManagement, #manageFacilities, #manageManufacturers {
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"></a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="./images/user-icon-2046x2048-9pwm22pp.png" alt="Profile" class="profile-icon">
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a id = "logoutButton"class="dropdown-item" href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="#" onclick="showManageUsers()">Manage Users</a>
+        <a href="#" onclick="showManageFacilities()">Manage Facilities</a>
+        <a href="#" onclick="showManageManufacturers()">Manage Manufacturers</a>
+        <a href="#" onclick="showManageVaccines()">Manage Vaccines</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <div id= "manageUsers" class = "container">
+            <h2>Manage Users</h2>
+        <div class="container mt-4">
+            <!-- Horizontal Tabs -->
+            <ul class="nav nav-tabs" id="userManagementTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="patients-tab" data-bs-toggle="tab" data-bs-target="#patients" type="button" role="tab" aria-controls="patients" aria-selected="true">Patients</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="health-workers-tab" data-bs-toggle="tab" data-bs-target="#health-workers" type="button" role="tab" aria-controls="health-workers" aria-selected="false">Health Workers</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="facility-managers-tab" data-bs-toggle="tab" data-bs-target="#facility-managers" type="button" role="tab" aria-controls="facility-managers" aria-selected="false">Facility Managers</button>
+                </li>
+            </ul>
+        
+            <!-- Tab Content -->
+            <div class="tab-content mt-3" id="userManagementTabsContent">
+                <!-- Patients Tab -->
+                <div class="tab-pane fade show active" id="patients" role="tabpanel" aria-labelledby="patients-tab">
+<!-- Manage Patients Section -->
+<div id="managePatients" class="container">
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPatientModal">Add Patient</button>
+    
+    <table id="patientsTable" class="table">
+        <thead>
+            <tr>
+                <th>Patient ID</th>
+                <th>Patient Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="patientsTableBody">
+            <!-- Rows will be populated dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<!-- View Patient Modal -->
+<div class="modal fade" id="viewPatientModal" tabindex="-1" aria-labelledby="viewPatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewPatientModalLabel">Patient Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Name:</strong> <span id="viewPatientName"></span></p>
+                <p><strong>Date of Birth:</strong> <span id="viewPatientDOB"></span></p>
+                <p><strong>Gender:</strong> <span id="viewPatientGender"></span></p>
+                <p><strong>Blood Group:</strong> <span id="viewPatientBloodGroup"></span></p>
+                <p><strong>Phone Number:</strong> <span id="viewPatientPhone"></span></p>
+                <p><strong>Email:</strong> <span id="viewPatientEmail"></span></p>
+                <p><strong>Address:</strong> <span id="viewPatientAddress"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Patient Modal -->
+<div class="modal fade" id="editPatientModal" tabindex="-1" aria-labelledby="editPatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPatientModalLabel">Edit Patient</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editPatientForm">
+                    <input type="hidden" id="editPatientId">
+
+                    <div class="mb-3">
+                        <label for="editPatientFirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="editPatientFirstName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPatientLastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="editPatientLastName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPatientDOB" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="editPatientDOB" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPatientGender" class="form-label">Gender</label>
+                        <select class="form-control" id="editPatientGender" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPatientBloodGroup" class="form-label">Blood Group</label>
+                        <select class="form-control" id="editPatientBloodGroup" required>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPatientPhone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="editPatientPhone" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPatientEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editPatientEmail" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPatientAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="editPatientAddress">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add Patient Modal -->
+<div class="modal fade" id="addPatientModal" tabindex="-1" aria-labelledby="addPatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPatientModalLabel">Add Patient</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addPatientForm">
+                    <div class="mb-3">
+                        <label for="patientFirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="patientFirstName" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="patientLastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="patientLastName" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="patientDOB" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="patientDOB" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="patientGender" class="form-label">Gender</label>
+                        <select class="form-control" id="patientGender" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="patientBloodGroup" class="form-label">Blood Group</label>
+                        <select class="form-control" id="patientBloodGroup" required>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="patientPhone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="patientPhone" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="patientEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="patientEmail" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="patientAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="patientAddress">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+                </div>
+        
+                <!-- Health Workers Tab -->
+                <div class="tab-pane fade" id="health-workers" role="tabpanel" aria-labelledby="health-workers-tab">
+                    <!-- Manage Health Workers Section -->
+<div id="manageHealthWorkers" class="container">
+
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addHealthWorkerModal">Add Health Worker</button>
+
+    <table id="healthWorkersTable" class="table">
+        <thead>
+            <tr>
+                <th>Health Worker ID</th>
+                <th>Health Worker Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="healthWorkersTableBody">
+            <!-- Rows will be populated dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<!-- View Health Worker Modal -->
+<div class="modal fade" id="viewHealthWorkerModal" tabindex="-1" aria-labelledby="viewHealthWorkerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewHealthWorkerModalLabel">Health Worker Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Name:</strong> <span id="viewHealthWorkerName"></span></p>
+                <p><strong>Facility ID:</strong> <span id="viewHealthWorkerFacilityID"></span></p>
+                <p><strong>Phone Number:</strong> <span id="viewHealthWorkerPhone"></span></p>
+                <p><strong>Email:</strong> <span id="viewHealthWorkerEmail"></span></p>
+                <p><strong>Address:</strong> <span id="viewHealthWorkerAddress"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Health Worker Modal -->
+<div class="modal fade" id="editHealthWorkerModal" tabindex="-1" aria-labelledby="editHealthWorkerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editHealthWorkerModalLabel">Edit Health Worker</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editHealthWorkerForm">
+                    <input type="hidden" id="editHealthWorkerId">
+
+                    <div class="mb-3">
+                        <label for="editHealthWorkerFirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="editHealthWorkerFirstName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editHealthWorkerLastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="editHealthWorkerLastName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editHealthWorkerFacilityID" class="form-label">Facility ID</label>
+                        <input type="number" class="form-control" id="editHealthWorkerFacilityID">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editHealthWorkerPhone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="editHealthWorkerPhone" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editHealthWorkerEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editHealthWorkerEmail" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editHealthWorkerAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="editHealthWorkerAddress">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addHealthWorkerModal" tabindex="-1" aria-labelledby="addHealthWorkerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addHealthWorkerModalLabel">Add Health Worker</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addHealthWorkerForm">
+                    <div class="mb-3">
+                        <label for="healthWorkerID" class="form-label">Health Worker ID</label>
+                        <input type="text" class="form-control" id="healthWorkerID" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="healthWorkerFirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="healthWorkerFirstName" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="healthWorkerLastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="healthWorkerLastName" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="healthWorkerFacilityID" class="form-label">Facility ID</label>
+                        <input type="number" class="form-control" id="healthWorkerFacilityID">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="healthWorkerPhone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="healthWorkerPhone" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="healthWorkerEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="healthWorkerEmail" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="healthWorkerAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="healthWorkerAddress">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+                </div>
+        
+                <!-- Facility Managers Tab -->
+                <div class="tab-pane fade" id="facility-managers" role="tabpanel" aria-labelledby="facility-managers-tab">
+                    <div id="manageFacilityManagers" class="container">
+                        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addFacilityManagerModal">Add Facility Manager</button>
+                    
+                        <table id="facilityManagersTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Facility Manager ID</th>
+                                    <th>Facility Manager Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="facilityManagersTableBody">
+                                <!-- Rows will be populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- View Facility Manager Modal -->
+                    <div class="modal fade" id="viewFacilityManagerModal" tabindex="-1" aria-labelledby="viewFacilityManagerModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="viewFacilityManagerModalLabel">Facility Manager Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>Name:</strong> <span id="viewFacilityManagerName"></span></p>
+                                    <p><strong>Facility ID:</strong> <span id="viewFacilityManagerFacilityID"></span></p>
+                                    <p><strong>Phone Number:</strong> <span id="viewFacilityManagerPhone"></span></p>
+                                    <p><strong>Email:</strong> <span id="viewFacilityManagerEmail"></span></p>
+                                    <p><strong>Address:</strong> <span id="viewFacilityManagerAddress"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Edit Facility Manager Modal -->
+<div class="modal fade" id="editFacilityManagerModal" tabindex="-1" aria-labelledby="editFacilityManagerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editFacilityManagerModalLabel">Edit Facility Manager</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editFacilityManagerForm">
+                    <input type="hidden" id="editFacilityManagerId">
+                    <div class="mb-3">
+                        <label for="editFacilityManagerFirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="editFacilityManagerFirstName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityManagerLastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="editFacilityManagerLastName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityManagerFacilityID" class="form-label">Facility ID</label>
+                        <input type="number" class="form-control" id="editFacilityManagerFacilityID">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityManagerPhone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="editFacilityManagerPhone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityManagerEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editFacilityManagerEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityManagerAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="editFacilityManagerAddress">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+                    <!-- Add Facility Manager Modal -->
+                    <div class="modal fade" id="addFacilityManagerModal" tabindex="-1" aria-labelledby="addFacilityManagerModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addFacilityManagerModalLabel">Add Facility Manager</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="addFacilityManagerForm">
+                                        <div class="mb-3">
+                                            <label for="facilityManagerID" class="form-label">Facility Manager ID</label>
+                                            <input type="text" class="form-control" id="facilityManagerID" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="facilityManagerFirstName" class="form-label">First Name</label>
+                                            <input type="text" class="form-control" id="facilityManagerFirstName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="facilityManagerLastName" class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" id="facilityManagerLastName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="facilityManagerFacilityID" class="form-label">Facility ID</label>
+                                            <input type="number" class="form-control" id="facilityManagerFacilityID">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="facilityManagerPhone" class="form-label">Phone Number</label>
+                                            <input type="text" class="form-control" id="facilityManagerPhone" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="facilityManagerEmail" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="facilityManagerEmail" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="facilityManagerAddress" class="form-label">Address</label>
+                                            <input type="text" class="form-control" id="facilityManagerAddress">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Manage Facilities Section -->
+<div id="manageFacilities" class="container">
+    <h2>Manage Facilities</h2>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addFacilityModal">Add Facility</button>
+    
+    <table id="facilitiesTable" class="table">
+        <thead>
+            <tr>
+                <th>Facility ID</th>
+                <th>Facility Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="facilitiesTableBody">
+            <!-- Rows will be populated dynamically -->
+        </tbody>
+    <!-- View Facility Modal -->
+<div class="modal fade" id="viewFacilityModal" tabindex="-1" aria-labelledby="viewFacilityModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewFacilityModalLabel">Facility Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Name:</strong> <span id="viewFacilityName"></span></p>
+                <p><strong>Location:</strong> <span id="viewFacilityLocation"></span></p>
+                <p><strong>Phone Number:</strong> <span id="viewFacilityPhone"></span></p>
+                <p><strong>Email:</strong> <span id="viewFacilityEmail"></span></p>
+                <p><strong>Facility Type:</strong> <span id="viewFacilityType"></span></p>
+                <p><strong>Max Storage Capacity:</strong> <span id="viewFacilityCapacity"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Facility Modal -->
+<div class="modal fade" id="editFacilityModal" tabindex="-1" aria-labelledby="editFacilityModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editFacilityModalLabel">Edit Facility</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editFacilityForm">
+                    <input type="hidden" id="editFacilityId">
+                    <div class="mb-3">
+                        <label for="editFacilityName" class="form-label">Facility Name</label>
+                        <input type="text" class="form-control" id="editFacilityName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityLocation" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="editFacilityLocation">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityPhone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="editFacilityPhone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editFacilityEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityType" class="form-label">Facility Type</label>
+                        <input type="text" class="form-control" id="editFacilityType">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFacilityCapacity" class="form-label">Max Storage Capacity</label>
+                        <input type="number" class="form-control" id="editFacilityCapacity" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    </table>
+</div>
+
+<!-- Add Facility Modal -->
+<div class="modal fade" id="addFacilityModal" tabindex="-1" aria-labelledby="addFacilityModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFacilityModalLabel">Add Facility</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addFacilityForm">
+                    <div class="mb-3">
+                        <label for="facilityName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="facilityName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="facilityLocation" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="facilityLocation" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="facilityPhone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="facilityPhone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="facilityEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="facilityEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="facilityType" class="form-label">Facility Type</label>
+                        <select class="form-control" id="facilityType" required>
+                            <option value="Hospital">Hospital</option>
+                            <option value="Clinic">Clinic</option>
+                            <option value="Vaccination Center">Vaccination Center</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="facilityCapacity" class="form-label">Max Storage Capacity</label>
+                        <input type="number" class="form-control" id="facilityCapacity" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        <!-- Manage Vaccine Manufacturers Section -->
+<div id="manageManufacturers" class="container">
+    <h2>Manage Vaccine Manufacturers</h2>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addManufacturerModal">Add Manufacturer</button>
+    
+    <table id="manufacturersTable" class="table">
+        <thead>
+            <tr>
+                <th>Manufacturer ID</th>
+                <th>Manufacturer Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="manufacturersTableBody">
+            <!-- Rows will be populated dynamically -->
+        </tbody>
+        <!-- View Manufacturer Modal -->
+<div class="modal fade" id="viewManufacturerModal" tabindex="-1" aria-labelledby="viewManufacturerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewManufacturerModalLabel">Manufacturer Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Name:</strong> <span id="viewManufacturerName"></span></p>
+                <p><strong>Phone Number:</strong> <span id="viewManufacturerPhone"></span></p>
+                <p><strong>Email:</strong> <span id="viewManufacturerEmail"></span></p>
+                <p><strong>Address:</strong> <span id="viewManufacturerAddress"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Manufacturer Modal -->
+<div class="modal fade" id="editManufacturerModal" tabindex="-1" aria-labelledby="editManufacturerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editManufacturerModalLabel">Edit Manufacturer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editManufacturerForm">
+                    <input type="hidden" id="editManufacturerId">
+                    <div class="mb-3">
+                        <label for="editManufacturerName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editManufacturerName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editManufacturerPhone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="editManufacturerPhone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editManufacturerEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editManufacturerEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editManufacturerAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="editManufacturerAddress">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    </table>
+</div>
+
+<!-- Add Manufacturer Modal -->
+<div class="modal fade" id="addManufacturerModal" tabindex="-1" aria-labelledby="addManufacturerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addManufacturerModalLabel">Add Manufacturer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addManufacturerForm">
+                    <div class="mb-3">
+                        <label for="manufacturerName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="manufacturerName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="manufacturerPhone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="manufacturerPhone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="manufacturerEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="manufacturerEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="manufacturerAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="manufacturerAddress">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="manageVaccines" class="container">
+    <h2>Manage Vaccines</h2>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addVaccineModal">Add Vaccine</button>
+    
+    <table id="vaccinesTable" class="table">
+        <thead>
+            <tr>
+                <th>Vaccine ID</th>
+                <th>Vaccine Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="vaccinesTableBody">
+            <!-- Rows will be populated dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<!-- View Vaccine Modal -->
+<div class="modal fade" id="viewVaccineModal" tabindex="-1" aria-labelledby="viewVaccineModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewVaccineModalLabel">Vaccine Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Name:</strong> <span id="viewVaccineName"></span></p>
+                <p><strong>Type:</strong> <span id="viewVaccineType"></span></p>
+                <p><strong>Dosage Amount:</strong> <span id="viewVaccineDosage"></span></p>
+                <p><strong>Required Doses:</strong> <span id="viewVaccineDoses"></span></p>
+                <p><strong>Side Effects:</strong> <span id="viewVaccineSideEffects"></span></p>
+                <p><strong>Storage Conditions:</strong> <span id="viewVaccineStorage"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Vaccine Modal -->
+<div class="modal fade" id="editVaccineModal" tabindex="-1" aria-labelledby="editVaccineModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editVaccineModalLabel">Edit Vaccine</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editVaccineForm">
+                    <input type="hidden" id="editVaccineId">
+                    <div class="mb-3">
+                        <label for="editVaccineName" class="form-label">Vaccine Name</label>
+                        <input type="text" class="form-control" id="editVaccineName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editVaccineType" class="form-label">Type</label>
+                        <select class="form-control" id="editVaccineType" required>
+                            <option value="Inactivated">Inactivated</option>
+                            <option value="Live">Live</option>
+                            <option value="Subunit">Subunit</option>
+                            <option value="mRNA">mRNA</option>
+                            <option value="Vector">Vector</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editVaccineDosage" class="form-label">Dosage Amount</label>
+                        <input type="number" step="0.01" class="form-control" id="editVaccineDosage" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editVaccineDoses" class="form-label">Required Doses</label>
+                        <input type="number" class="form-control" id="editVaccineDoses" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editVaccineSideEffects" class="form-label">Side Effects</label>
+                        <textarea class="form-control" id="editVaccineSideEffects"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editVaccineStorage" class="form-label">Storage Conditions</label>
+                        <textarea class="form-control" id="editVaccineStorage"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Vaccine Modal -->
+<div class="modal fade" id="addVaccineModal" tabindex="-1" aria-labelledby="addVaccineModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addVaccineModalLabel">Add Vaccine</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addVaccineForm">
+                    <div class="mb-3">
+                        <label for="vaccineName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="vaccineName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vaccineType" class="form-label">Type</label>
+                        <select class="form-control" id="vaccineType" required>
+                            <option value="Inactivated">Inactivated</option>
+                            <option value="Live">Live</option>
+                            <option value="Subunit">Subunit</option>
+                            <option value="mRNA">mRNA</option>
+                            <option value="Vector">Vector</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vaccineDosage" class="form-label">Dosage Amount</label>
+                        <input type="number" step="0.01" class="form-control" id="vaccineDosage" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vaccineDoses" class="form-label">Required Doses</label>
+                        <input type="number" class="form-control" id="vaccineDoses" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vaccineSideEffects" class="form-label">Side Effects</label>
+                        <textarea class="form-control" id="vaccineSideEffects"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vaccineStorage" class="form-label">Storage Conditions</label>
+                        <textarea class="form-control" id="vaccineStorage"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script to toggle between sections -->
+    <script>
+        function showManageUsers() {
+            document.getElementById('manageUsers').style.display = 'block';
+            document.getElementById('manageFacilities').style.display = 'none';
+            document.getElementById('manageManufacturers').style.display = 'none';
+            document.getElementById('manageVaccines').style.display = 'none';
+        }
+
+        function showManageFacilities() {
+            document.getElementById('manageUsers').style.display = 'none';
+            document.getElementById('manageFacilities').style.display = 'block';
+            document.getElementById('manageManufacturers').style.display = 'none';
+            document.getElementById('manageVaccines').style.display = 'none';
+        }
+
+        function showManageManufacturers() {
+            document.getElementById('manageUsers').style.display = 'none';
+            document.getElementById('manageFacilities').style.display = 'none';
+            document.getElementById('manageManufacturers').style.display = 'block';
+            document.getElementById('manageVaccines').style.display = 'none';
+        }
+
+        function showManageVaccines() {
+            document.getElementById('manageUsers').style.display = 'none';
+            document.getElementById('manageFacilities').style.display = 'none';
+            document.getElementById('manageManufacturers').style.display = 'none';
+            document.getElementById('manageVaccines').style.display = 'block';
+        }
+
+        // Set default view to User Management
+        showManageUsers();
+
+        // Fetch manufacturers and populate the table
+async function fetchManufacturers() {
+    try {
+        const response = await fetch('http://localhost:3000/manufacturers');
+        if (!response.ok) {
+            console.error("Failed to fetch manufacturers");
+            return;
+        }
+        const manufacturers = await response.json();
+        populateManufacturersTable(manufacturers);
+    } catch (error) {
+        console.error("Error fetching manufacturers:", error);
+    }
+}
+
+function populateManufacturersTable(manufacturers) {
+    const tableBody = document.getElementById('manufacturersTableBody');
+    tableBody.innerHTML = ''; // Clear existing rows
+
+    manufacturers.forEach(m => {
+        const row = document.createElement('tr');
+        row.setAttribute('data-id', m.manufacturer_id);
+
+        // Manufacturer ID
+        const idCell = document.createElement('td');
+        idCell.textContent = m.manufacturer_id;
+        row.appendChild(idCell);
+
+        // Manufacturer Name
+        const nameCell = document.createElement('td');
+        nameCell.textContent = m.name;
+        row.appendChild(nameCell);
+
+        // Actions
+        const actionsCell = document.createElement('td');
+        
+        // View Icon
+        const viewIcon = document.createElement('i');
+        viewIcon.className = 'fas fa-eye action-icon';
+        viewIcon.title = 'View';
+        viewIcon.onclick = () => viewManufacturer(m.manufacturer_id); // Add your view functionality
+        actionsCell.appendChild(viewIcon);
+
+        // Edit Icon
+        const editIcon = document.createElement('i');
+        editIcon.className = 'fas fa-edit action-icon mx-2';
+        editIcon.title = 'Edit';
+        editIcon.onclick = () => editManufacturer(m.manufacturer_id); // Add your edit functionality
+        actionsCell.appendChild(editIcon);
+
+        // Delete Icon
+        const deleteIcon = document.createElement('i');
+        deleteIcon.className = 'fas fa-trash action-icon';
+        deleteIcon.title = 'Delete';
+        deleteIcon.onclick = () => deleteManufacturer(m.manufacturer_id); // Add your delete functionality
+        actionsCell.appendChild(deleteIcon);
+
+        row.appendChild(actionsCell);
+        tableBody.appendChild(row);
+    });
+}
+
+// View manufacturer details
+function viewManufacturer(manufacturerId) {
+    // Fetch manufacturer details from the server
+    fetch(`http://localhost:3000/manufacturers/${manufacturerId}`)
+        .then(response => response.json())
+        .then(manufacturer => {
+            // Populate the modal with the manufacturer's details
+            document.getElementById('viewManufacturerName').textContent = manufacturer.name;
+            document.getElementById('viewManufacturerPhone').textContent = manufacturer.phone_number;
+            document.getElementById('viewManufacturerEmail').textContent = manufacturer.email;
+            document.getElementById('viewManufacturerAddress').textContent = manufacturer.address;
+
+            // Show the modal
+            const viewModal = new bootstrap.Modal(document.getElementById('viewManufacturerModal'));
+            viewModal.show();
+        })
+        .catch(error => {
+            console.error('Error fetching manufacturer details:', error);
+            alert('Failed to fetch manufacturer details.');
+        });
+}
+
+// Delete manufacturer
+function deleteManufacturer(manufacturerId) {
+    const confirmation = confirm(`Are you sure you want to delete Manufacturer: ${manufacturerId}?`);
+    if (confirmation) {
+        fetch(`http://localhost:3000/manufacturers/${manufacturerId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                alert(`Manufacturer: ${manufacturerId} has been deleted.`);
+                const row = document.querySelector(`#manufacturersTableBody tr[data-id='${manufacturerId}']`);
+                if (row) {
+                    row.remove();
+                }
+            } else {
+                alert(`Failed to delete Manufacturer: ${manufacturerId}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting manufacturer:', error);
+            alert('An error occurred while deleting the manufacturer.');
+        });
+    }
+}
+
+
+// Fetch manufacturers on page load
+document.addEventListener('DOMContentLoaded', fetchManufacturers);
+
+
+// Edit Manufacturer functionality
+function editManufacturer(manufacturerId) {
+    // Fetch manufacturer details
+    fetch(`http://localhost:3000/manufacturers/${manufacturerId}`)
+        .then(response => response.json())
+        .then(manufacturer => {
+            // Populate the form with manufacturer details
+            document.getElementById('editManufacturerId').value = manufacturer.manufacturer_id;
+            document.getElementById('editManufacturerName').value = manufacturer.name;
+            document.getElementById('editManufacturerPhone').value = manufacturer.phone_number;
+            document.getElementById('editManufacturerEmail').value = manufacturer.email;
+            document.getElementById('editManufacturerAddress').value = manufacturer.address;
+
+            // Show the Edit Manufacturer modal
+            const editModal = new bootstrap.Modal(document.getElementById('editManufacturerModal'));
+            editModal.show();
+        })
+        .catch(error => {
+            console.error('Error fetching manufacturer details:', error);
+            alert('Failed to fetch manufacturer details.');
+        });
+}
+
+// Handle the form submission to update the manufacturer
+document.getElementById('editManufacturerForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const manufacturerId = document.getElementById('editManufacturerId').value;
+    const name = document.getElementById('editManufacturerName').value;
+    const phone = document.getElementById('editManufacturerPhone').value;
+    const email = document.getElementById('editManufacturerEmail').value;
+    const address = document.getElementById('editManufacturerAddress').value;
+
+    // Send the update request to the backend
+    fetch(`http://localhost:3000/manufacturers/${manufacturerId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name,
+            phone_number: phone,
+            email,
+            address,
+        }),
+    })
+    .then(response => response.json())
+    .then(updatedManufacturer => {
+        // Close the modal and refresh manufacturers
+        const editModal = bootstrap.Modal.getInstance(document.getElementById('editManufacturerModal'));
+        editModal.hide();
+        fetchManufacturers(); // Re-fetch manufacturers after the update
+    })
+    .catch(error => {
+        console.error('Error updating manufacturer:', error);
+        alert('Failed to update manufacturer.');
+    });
+});
+
+// Handle the form submission to add a manufacturer
+document.getElementById('addManufacturerForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('manufacturerName').value;
+    const phone = document.getElementById('manufacturerPhone').value;
+    const email = document.getElementById('manufacturerEmail').value;
+    const address = document.getElementById('manufacturerAddress').value;
+
+    // Send the POST request to add the new manufacturer
+    fetch('http://localhost:3000/manufacturers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name,
+            phone_number: phone,
+            email,
+            address,
+        }),
+    })
+    .then(response => response.json())
+    .then(newManufacturer => {
+        // Close the modal after successfully adding the manufacturer
+        const addModal = bootstrap.Modal.getInstance(document.getElementById('addManufacturerModal'));
+        addModal.hide();
+
+        // Clear the form fields after adding
+        document.getElementById('addManufacturerForm').reset();
+
+        // Fetch the updated list of manufacturers and update the table
+        fetchManufacturers();
+    })
+    .catch(error => {
+        console.error('Error adding manufacturer:', error);
+        alert('Failed to add manufacturer.');
+    });
+});
+
+
+// Fetch facilities and populate the table
+async function fetchFacilities() {
+        try {
+            const response = await fetch('http://localhost:3000/facilitiesAdmin');
+            if (!response.ok) {
+                console.error("Failed to fetch facilities");
+                return;
+            }
+            const facilities = await response.json();
+            populateFacilitiesTable(facilities);
+        } catch (error) {
+            console.error("Error fetching facilities:", error);
+        }
+    }
+
+    function populateFacilitiesTable(facilities) {
+        const tableBody = document.getElementById('facilitiesTableBody');
+        tableBody.innerHTML = ''; // Clear existing rows
+
+        facilities.forEach(facility => {
+            const row = document.createElement('tr');
+            row.setAttribute('data-id', facility.facility_id);
+
+            // Facility ID
+            const idCell = document.createElement('td');
+            idCell.textContent = facility.facility_id;
+            row.appendChild(idCell);
+
+            // Facility Name
+            const nameCell = document.createElement('td');
+            nameCell.textContent = facility.facility_name;
+            row.appendChild(nameCell);
+
+            // Actions
+            const actionsCell = document.createElement('td');
+            
+            // View Icon
+            const viewIcon = document.createElement('i');
+            viewIcon.className = 'fas fa-eye action-icon';
+            viewIcon.title = 'View';
+            viewIcon.onclick = () => viewFacility(facility.facility_id);
+            actionsCell.appendChild(viewIcon);
+
+            // Edit Icon
+            const editIcon = document.createElement('i');
+            editIcon.className = 'fas fa-edit action-icon mx-2';
+            editIcon.title = 'Edit';
+            editIcon.onclick = () => editFacility(facility.facility_id);
+            actionsCell.appendChild(editIcon);
+
+            // Delete Icon
+            const deleteIcon = document.createElement('i');
+            deleteIcon.className = 'fas fa-trash action-icon';
+            deleteIcon.title = 'Delete';
+            deleteIcon.onclick = () => deleteFacility(facility.facility_id);
+            actionsCell.appendChild(deleteIcon);
+
+            row.appendChild(actionsCell);
+            tableBody.appendChild(row);
+        });
+    }
+// Handle adding a facility
+document.getElementById('addFacilityForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const name = document.getElementById('facilityName').value;
+    const location = document.getElementById('facilityLocation').value;
+    const phone = document.getElementById('facilityPhone').value;
+    const email = document.getElementById('facilityEmail').value;
+    const type = document.getElementById('facilityType').value;
+    const capacity = document.getElementById('facilityCapacity').value;
+
+    fetch('http://localhost:3000/facilities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            facility_name: name,
+            location,
+            phone_number: phone,
+            email,
+            facility_type: type,
+            max_storage_capacity: capacity,
+        }),
+    })
+        .then(response => response.json())
+        .then(() => fetchFacilities())
+        .catch(error => console.error("Error adding facility:", error));
+});
+
+// Fetch facilities on page load
+document.addEventListener('DOMContentLoaded', fetchFacilities);
+
+function viewFacility(facilityId) {
+    // Fetch facility details from the server
+    fetch(`http://localhost:3000/facilities/${facilityId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch facility details');
+            }
+            return response.json();
+        })
+        .then(facility => {
+            // Populate the modal with the facility's details
+            document.getElementById('viewFacilityName').textContent = facility.facility_name;
+            document.getElementById('viewFacilityLocation').textContent = facility.location || 'N/A';
+            document.getElementById('viewFacilityPhone').textContent = facility.phone_number || 'N/A';
+            document.getElementById('viewFacilityEmail').textContent = facility.email || 'N/A';
+            document.getElementById('viewFacilityType').textContent = facility.facility_type || 'N/A';
+            document.getElementById('viewFacilityCapacity').textContent = facility.max_storage_capacity || 'N/A';
+
+            // Show the modal
+            const viewModal = new bootstrap.Modal(document.getElementById('viewFacilityModal'));
+            viewModal.show();
+        })
+        .catch(error => {
+            console.error('Error fetching facility details:', error);
+            alert('Failed to fetch facility details.');
+        });
+}
+
+function editFacility(facilityId) {
+    // Fetch facility details
+    fetch(`http://localhost:3000/facilities/${facilityId}`)
+        .then(response => response.json())
+        .then(facility => {
+            // Populate the form with facility details
+            document.getElementById('editFacilityId').value = facility.facility_id;
+            document.getElementById('editFacilityName').value = facility.facility_name;
+            document.getElementById('editFacilityLocation').value = facility.location || '';
+            document.getElementById('editFacilityPhone').value = facility.phone_number || '';
+            document.getElementById('editFacilityEmail').value = facility.email || '';
+            document.getElementById('editFacilityType').value = facility.facility_type || '';
+            document.getElementById('editFacilityCapacity').value = facility.max_storage_capacity || '';
+
+            // Show the Edit Facility modal
+            const editModal = new bootstrap.Modal(document.getElementById('editFacilityModal'));
+            editModal.show();
+        })
+        .catch(error => {
+            console.error('Error fetching facility details:', error);
+            alert('Failed to fetch facility details.');
+        });
+}
+
+document.getElementById('editFacilityForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const facilityId = document.getElementById('editFacilityId').value;
+    const facilityName = document.getElementById('editFacilityName').value;
+    const location = document.getElementById('editFacilityLocation').value;
+    const phone = document.getElementById('editFacilityPhone').value;
+    const email = document.getElementById('editFacilityEmail').value;
+    const facilityType = document.getElementById('editFacilityType').value;
+    const maxStorageCapacity = document.getElementById('editFacilityCapacity').value;
+
+    // Send the update request to the backend
+    fetch(`http://localhost:3000/facilities/${facilityId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            facility_name: facilityName,
+            location,
+            phone_number: phone,
+            email,
+            facility_type: facilityType,
+            max_storage_capacity: parseInt(maxStorageCapacity, 10),
+        }),
+    })
+    .then(response => response.json())
+    .then(updatedFacility => {
+        // Close the modal and refresh facilities
+        const editModal = bootstrap.Modal.getInstance(document.getElementById('editFacilityModal'));
+        editModal.hide();
+        fetchFacilities(); // Re-fetch facilities after the update
+    })
+    .catch(error => {
+        console.error('Error updating facility:', error);
+        alert('Failed to update facility.');
+    });
+});
+
+// Delete facility
+function deleteFacility(facilityId) {
+    const confirmation = confirm(`Are you sure you want to delete Facility: ${facilityId}?`);
+    if (confirmation) {
+        fetch(`http://localhost:3000/facilities/${facilityId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                alert(`Facility: ${facilityId} has been deleted.`);
+                const row = document.querySelector(`#facilitiesTableBody tr[data-id='${facilityId}']`);
+                if (row) {
+                    row.remove(); // Remove the corresponding row from the table
+                }
+            } else {
+                alert(`Failed to delete Facility: ${facilityId}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting facility:', error);
+            alert('An error occurred while deleting the facility.');
+        });
+    }
+}
+
+// Fetch facilities on page load
+document.addEventListener('DOMContentLoaded', fetchFacilities);
+
+// Fetch patients and populate the table
+async function fetchPatients() {
+        const response = await fetch('http://localhost:3000/patients');
+        const patients = await response.json();
+        populatePatientsTable(patients);
+    }
+
+    function populatePatientsTable(patients) {
+        const tableBody = document.getElementById('patientsTableBody');
+        tableBody.innerHTML = '';
+        patients.forEach(p => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${p.patient_id}</td>
+                <td>${p.first_name} ${p.last_name}</td>
+                <td>
+                    <i class="fas fa-eye" onclick="viewPatient(${p.patient_id})"></i>
+                    <i class="fas fa-edit mx-2" onclick="editPatient(${p.patient_id})"></i>
+                    <i class="fas fa-trash" onclick="deletePatient(${p.patient_id})"></i>
+                </td>`;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function viewPatient(id) {
+    fetch(`http://localhost:3000/patientsAdmin/${id}`)
+        .then(res => res.json())
+        .then(p => {
+            document.getElementById('viewPatientName').textContent = `${p.first_name} ${p.last_name}`;
+            
+            // Format the date_of_birth
+            const dob = new Date(p.date_of_birth);
+            const formattedDOB = dob.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('viewPatientDOB').textContent = formattedDOB;
+            
+            document.getElementById('viewPatientGender').textContent = p.gender;
+            document.getElementById('viewPatientBloodGroup').textContent = p.blood_group;
+            document.getElementById('viewPatientPhone').textContent = p.phone_number;
+            document.getElementById('viewPatientEmail').textContent = p.email;
+            document.getElementById('viewPatientAddress').textContent = p.address;
+            
+            new bootstrap.Modal('#viewPatientModal').show();
+        });
+}
+
+
+async function editPatient(id) {
+    const response = await fetch(`http://localhost:3000/patientsAdmin/${id}`);
+    const p = await response.json();
+
+    document.getElementById('editPatientId').value = id;
+    document.getElementById('editPatientFirstName').value = p.first_name;
+    document.getElementById('editPatientLastName').value = p.last_name;
+    
+    // Ensure the date format is YYYY-MM-DD for the date input field
+    const dob = new Date(p.date_of_birth);
+    const formattedDOB = dob.toISOString().split('T')[0]; // Converts to YYYY-MM-DD
+    document.getElementById('editPatientDOB').value = formattedDOB;
+    
+    document.getElementById('editPatientGender').value = p.gender;
+    document.getElementById('editPatientBloodGroup').value = p.blood_group;
+    document.getElementById('editPatientPhone').value = p.phone_number;
+    document.getElementById('editPatientEmail').value = p.email;
+    document.getElementById('editPatientAddress').value = p.address;
+
+    new bootstrap.Modal('#editPatientModal').show();
+}
+
+// Add event listener to the form
+document.getElementById('editPatientForm').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get patient ID from the hidden input field
+    const patientId = document.getElementById('editPatientId').value;
+
+    // Collect updated form data
+    const updatedData = {
+        first_name: document.getElementById('editPatientFirstName').value,
+        last_name: document.getElementById('editPatientLastName').value,
+        date_of_birth: document.getElementById('editPatientDOB').value,
+        gender: document.getElementById('editPatientGender').value,
+        blood_group: document.getElementById('editPatientBloodGroup').value,
+        phone_number: document.getElementById('editPatientPhone').value,
+        email: document.getElementById('editPatientEmail').value,
+        address: document.getElementById('editPatientAddress').value,
+    };
+
+    try {
+        // Send PUT request to update patient details
+        const response = await fetch(`http://localhost:3000/patients/${patientId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+        });
+
+        // Handle response
+        const result = await response.json();
+        if (response.ok) {
+            alert(result.message); // Display success message
+            location.reload(); // Reload the page to reflect the changes
+        } else {
+            alert(`Error: ${result.message || 'Failed to update patient details'}`);
+        }
+    } catch (error) {
+        console.error('Error updating patient:', error);
+        alert('An error occurred while updating patient details.');
+    }
+});
+
+    
+document.querySelector('#addPatientForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+        first_name: document.getElementById('patientFirstName').value,
+        last_name: document.getElementById('patientLastName').value,
+        date_of_birth: document.getElementById('patientDOB').value,
+        gender: document.getElementById('patientGender').value,
+        blood_group: document.getElementById('patientBloodGroup').value,
+        phone_number: document.getElementById('patientPhone').value,
+        email: document.getElementById('patientEmail').value,
+        address: document.getElementById('patientAddress').value,
+        password: '$2a$10$ifl9mFignyKlZA/jq5Kv7u1lUtmq..gehqzs1PMFY0B93.3AxHpze' // Hashed password
+    };
+
+    try {
+        const response = await fetch(`http://localhost:3000/patients`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert('Patient added successfully');
+            new bootstrap.Modal('#addPatientModal').hide();
+            fetchPatients(); // Refresh the list of patients
+        } else {
+            alert(`Error: ${result.message || 'Failed to add patient'}`);
+        }
+    } catch (error) {
+        console.error('Error adding patient:', error);
+        alert('An error occurred while adding the patient.');
+    }
+});
+
+
+    fetchPatients();
+
+    // Function to delete a patient
+async function deletePatient(patientId) {
+    const confirmDelete = confirm("Are you sure you want to delete this patient?");
+    if (!confirmDelete) return;
+
+    try {
+        const response = await fetch(`http://localhost:3000/patients/${patientId}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            alert("Patient deleted successfully.");
+            fetchPatients(); // Refresh the patient list after deletion
+        } else {
+            const errorData = await response.json();
+            alert(`Failed to delete patient: ${errorData.error}`);
+        }
+    } catch (error) {
+        console.error("Error deleting patient:", error);
+        alert("An error occurred while deleting the patient. Please try again.");
+    }
+}
+
+// Fetch health workers and populate the table
+async function fetchHealthWorkers() {
+    const response = await fetch('http://localhost:3000/healthWorkersAdmin');
+    const healthWorkers = await response.json();
+    populateHealthWorkersTable(healthWorkers);
+}
+
+function populateHealthWorkersTable(healthWorkers) {
+    const tableBody = document.getElementById('healthWorkersTableBody');
+    tableBody.innerHTML = '';
+    healthWorkers.forEach(hw => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${hw.health_worker_id}</td>
+            <td>${hw.first_name} ${hw.last_name}</td>
+            <td>
+                <i class="fas fa-eye" onclick="viewHealthWorker('${hw.health_worker_id}')"></i>
+                <i class="fas fa-edit mx-2" onclick="editHealthWorker('${hw.health_worker_id}')"></i>
+                <i class="fas fa-trash" onclick="deleteHealthWorker('${hw.health_worker_id}')"></i>
+            </td>`;
+        tableBody.appendChild(row);
+    });
+}
+
+
+// View health worker details
+function viewHealthWorker(id) {
+    console.log("yes")
+    fetch(`http://localhost:3000/healthWorkers/${id}`)
+        .then(res => res.json())
+        .then(hw => {
+            document.getElementById('viewHealthWorkerName').textContent = `${hw.first_name} ${hw.last_name}`;
+            document.getElementById('viewHealthWorkerFacilityID').textContent = hw.facility_id;
+            document.getElementById('viewHealthWorkerPhone').textContent = hw.phone_number;
+            document.getElementById('viewHealthWorkerEmail').textContent = hw.email;
+            document.getElementById('viewHealthWorkerAddress').textContent = hw.address;
+            new bootstrap.Modal('#viewHealthWorkerModal').show();
+        });
+}
+
+document.querySelector('#addHealthWorkerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+        health_worker_id: document.getElementById('healthWorkerID').value,
+        first_name: document.getElementById('healthWorkerFirstName').value,
+        last_name: document.getElementById('healthWorkerLastName').value,
+        facility_id: document.getElementById('healthWorkerFacilityID').value,
+        phone_number: document.getElementById('healthWorkerPhone').value,
+        email: document.getElementById('healthWorkerEmail').value,
+        address: document.getElementById('healthWorkerAddress').value,
+        password: '$2a$10$ifl9mFignyKlZA/jq5Kv7u1lUtmq..gehqzs1PMFY0B93.3AxHpze', // Hashed password
+    };
+
+    const response = await fetch('http://localhost:3000/healthWorkers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+        alert('Health Worker added successfully');
+        new bootstrap.Modal('#addHealthWorkerModal').hide();
+        fetchHealthWorkers();
+    } else {
+        alert('Failed to add Health Worker');
+    }
+});
+
+
+// Edit health worker details
+async function editHealthWorker(id) {
+    const response = await fetch(`http://localhost:3000/healthWorkers/${id}`);
+    const hw = await response.json();
+
+    document.getElementById('editHealthWorkerId').value = id;
+    document.getElementById('editHealthWorkerFirstName').value = hw.first_name;
+    document.getElementById('editHealthWorkerLastName').value = hw.last_name;
+    document.getElementById('editHealthWorkerFacilityID').value = hw.facility_id;
+    document.getElementById('editHealthWorkerPhone').value = hw.phone_number;
+    document.getElementById('editHealthWorkerEmail').value = hw.email;
+    document.getElementById('editHealthWorkerAddress').value = hw.address;
+
+    new bootstrap.Modal('#editHealthWorkerModal').show();
+}
+
+document.querySelector('#editHealthWorkerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = document.getElementById('editHealthWorkerId').value;
+    const updatedData = {
+        first_name: document.getElementById('editHealthWorkerFirstName').value,
+        last_name: document.getElementById('editHealthWorkerLastName').value,
+        facility_id: document.getElementById('editHealthWorkerFacilityID').value,
+        phone_number: document.getElementById('editHealthWorkerPhone').value,
+        email: document.getElementById('editHealthWorkerEmail').value,
+        address: document.getElementById('editHealthWorkerAddress').value,
+    };
+
+    const response = await fetch(`http://localhost:3000/healthWorkers/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData),
+    });
+
+    if (response.ok) {
+        alert('Health Worker updated successfully');
+        fetchHealthWorkers();
+    } else {
+        alert('Failed to update Health Worker');
+    }
+});
+
+// Delete a health worker
+async function deleteHealthWorker(id) {
+    if (confirm('Are you sure you want to delete this Health Worker?')) {
+        const response = await fetch(`http://localhost:3000/healthWorkers/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            alert('Health Worker deleted successfully');
+            fetchHealthWorkers();
+        } else {
+            alert('Failed to delete Health Worker');
+        }
+    }
+}
+
+fetchHealthWorkers();
+
+
+// Fetch facility managers and populate the table
+async function fetchFacilityManagers() {
+    const response = await fetch('http://localhost:3000/facilityManagersAdmin');
+    const facilityManagers = await response.json();
+    populateFacilityManagersTable(facilityManagers);
+}
+
+function populateFacilityManagersTable(facilityManagers) {
+    const tableBody = document.getElementById('facilityManagersTableBody');
+    tableBody.innerHTML = '';
+    facilityManagers.forEach(fm => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${fm.facility_manager_id}</td>
+            <td>${fm.first_name} ${fm.last_name}</td>
+            <td>
+                <i class="fas fa-eye" onclick="viewFacilityManager('${fm.facility_manager_id}')"></i>
+                <i class="fas fa-edit mx-2" onclick="editFacilityManager('${fm.facility_manager_id}')"></i>
+                <i class="fas fa-trash" onclick="deleteFacilityManager('${fm.facility_manager_id}')"></i>
+            </td>`;
+        tableBody.appendChild(row);
+    });
+}
+
+// View facility manager details
+function viewFacilityManager(id) {
+    fetch(`http://localhost:3000/facilityManagers/${id}`)
+        .then(res => res.json())
+        .then(fm => {
+            document.getElementById('viewFacilityManagerName').textContent = `${fm.first_name} ${fm.last_name}`;
+            document.getElementById('viewFacilityManagerFacilityID').textContent = fm.facility_id;
+            document.getElementById('viewFacilityManagerPhone').textContent = fm.phone_number;
+            document.getElementById('viewFacilityManagerEmail').textContent = fm.email;
+            document.getElementById('viewFacilityManagerAddress').textContent = fm.address;
+            new bootstrap.Modal('#viewFacilityManagerModal').show();
+        });
+}
+
+// Add new facility manager
+document.querySelector('#addFacilityManagerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+        facility_manager_id: document.getElementById('facilityManagerID').value,
+        first_name: document.getElementById('facilityManagerFirstName').value,
+        last_name: document.getElementById('facilityManagerLastName').value,
+        facility_id: document.getElementById('facilityManagerFacilityID').value,
+        phone_number: document.getElementById('facilityManagerPhone').value,
+        email: document.getElementById('facilityManagerEmail').value,
+        address: document.getElementById('facilityManagerAddress').value,
+        password: '$2a$10$ifl9mFignyKlZA/jq5Kv7u1lUtmq..gehqzs1PMFY0B93.3AxHpze', // Hashed password
+    };
+
+    const response = await fetch('http://localhost:3000/facilityManagers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+        alert('Facility Manager added successfully');
+        new bootstrap.Modal('#addFacilityManagerModal').hide();
+        fetchFacilityManagers();
+    } else {
+        alert('Failed to add Facility Manager');
+    }
+});
+
+// Edit facility manager details
+async function editFacilityManager(id) {
+    const response = await fetch(`http://localhost:3000/facilityManagers/${id}`);
+    const fm = await response.json();
+
+    document.getElementById('editFacilityManagerId').value = id;
+    document.getElementById('editFacilityManagerFirstName').value = fm.first_name;
+    document.getElementById('editFacilityManagerLastName').value = fm.last_name;
+    document.getElementById('editFacilityManagerFacilityID').value = fm.facility_id;
+    document.getElementById('editFacilityManagerPhone').value = fm.phone_number;
+    document.getElementById('editFacilityManagerEmail').value = fm.email;
+    document.getElementById('editFacilityManagerAddress').value = fm.address;
+
+    new bootstrap.Modal('#editFacilityManagerModal').show();
+}
+
+document.querySelector('#editFacilityManagerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = document.getElementById('editFacilityManagerId').value;
+    const updatedData = {
+        first_name: document.getElementById('editFacilityManagerFirstName').value,
+        last_name: document.getElementById('editFacilityManagerLastName').value,
+        facility_id: document.getElementById('editFacilityManagerFacilityID').value,
+        phone_number: document.getElementById('editFacilityManagerPhone').value,
+        email: document.getElementById('editFacilityManagerEmail').value,
+        address: document.getElementById('editFacilityManagerAddress').value,
+    };
+
+    const response = await fetch(`http://localhost:3000/facilityManagers/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData),
+    });
+
+    if (response.ok) {
+        alert('Facility Manager updated successfully');
+        new bootstrap.Modal('#editFacilityManagerModal').hide();
+        fetchFacilityManagers();
+    } else {
+        alert('Failed to update Facility Manager');
+    }
+});
+
+// Delete facility manager
+async function deleteFacilityManager(id) {
+    if (confirm('Are you sure you want to delete this Facility Manager?')) {
+        const response = await fetch(`http://localhost:3000/facilityManagers/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+            alert('Facility Manager deleted successfully');
+            fetchFacilityManagers();
+        } else {
+            alert('Failed to delete Facility Manager');
+        }
+    }
+}
+
+fetchFacilityManagers();
+
+document.getElementById("logoutButton").addEventListener("click", function() {
+    // Perform any logout tasks you need, such as clearing session storage or cookies
+    // Example: sessionStorage.clear();  // Clears session data (if needed)
+
+    // Redirect to staff-login.html
+    window.location.href = "staff-login.html";
+});
+
+// Fetch vaccines and populate the table
+async function fetchVaccines() {
+    try {
+        const response = await fetch('http://localhost:3000/vaccinesAdmin');
+        if (!response.ok) {
+            console.error("Failed to fetch vaccines");
+            return;
+        }
+        const vaccines = await response.json();
+        populateVaccinesTable(vaccines);
+    } catch (error) {
+        console.error("Error fetching vaccines:", error);
+    }
+}
+
+function populateVaccinesTable(vaccines) {
+    const tableBody = document.getElementById('vaccinesTableBody');
+    tableBody.innerHTML = ''; // Clear existing rows
+
+    vaccines.forEach(vaccine => {
+        const row = document.createElement('tr');
+        row.setAttribute('data-id', vaccine.vaccine_id);
+
+        // Vaccine ID
+        const idCell = document.createElement('td');
+        idCell.textContent = vaccine.vaccine_id;
+        row.appendChild(idCell);
+
+        // Vaccine Name
+        const nameCell = document.createElement('td');
+        nameCell.textContent = vaccine.vaccine_name;
+        row.appendChild(nameCell);
+
+        // Actions
+        const actionsCell = document.createElement('td');
+        
+        // View Icon
+        const viewIcon = document.createElement('i');
+        viewIcon.className = 'fas fa-eye action-icon';
+        viewIcon.title = 'View';
+        viewIcon.onclick = () => viewVaccine(vaccine.vaccine_id);
+        actionsCell.appendChild(viewIcon);
+
+        // Edit Icon
+        const editIcon = document.createElement('i');
+        editIcon.className = 'fas fa-edit action-icon mx-2';
+        editIcon.title = 'Edit';
+        editIcon.onclick = () => editVaccine(vaccine.vaccine_id);
+        actionsCell.appendChild(editIcon);
+
+        // Delete Icon
+        const deleteIcon = document.createElement('i');
+        deleteIcon.className = 'fas fa-trash action-icon';
+        deleteIcon.title = 'Delete';
+        deleteIcon.onclick = () => deleteVaccine(vaccine.vaccine_id);
+        actionsCell.appendChild(deleteIcon);
+
+        row.appendChild(actionsCell);
+        tableBody.appendChild(row);
+    });
+}
+
+// Handle adding a vaccine
+document.getElementById('addVaccineForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const vaccineData = {
+        vaccine_name: document.getElementById('vaccineName').value,
+        type: document.getElementById('vaccineType').value,
+        dosage_amount: parseFloat(document.getElementById('vaccineDosage').value),
+        required_doses: parseInt(document.getElementById('vaccineDoses').value),
+        side_effects: document.getElementById('vaccineSideEffects').value,
+        storage_conditions: document.getElementById('vaccineStorage').value,
+    };
+
+    fetch('http://localhost:3000/vaccines', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(vaccineData),
+    })
+    .then(() => fetchVaccines())
+    .catch(error => console.error("Error adding vaccine:", error));
+});
+
+// Fetch vaccines on page load
+document.addEventListener('DOMContentLoaded', fetchVaccines);
+
+// View vaccine details
+function viewVaccine(vaccineId) {
+    fetch(`http://localhost:3000/vaccines/${vaccineId}`)
+        .then(response => response.json())
+        .then(vaccine => {
+            document.getElementById('viewVaccineName').textContent = vaccine.vaccine_name;
+            document.getElementById('viewVaccineType').textContent = vaccine.type;
+            document.getElementById('viewVaccineDosage').textContent = vaccine.dosage_amount;
+            document.getElementById('viewVaccineDoses').textContent = vaccine.required_doses;
+            document.getElementById('viewVaccineSideEffects').textContent = vaccine.side_effects || 'N/A';
+            document.getElementById('viewVaccineStorage').textContent = vaccine.storage_conditions || 'N/A';
+
+            const viewModal = new bootstrap.Modal(document.getElementById('viewVaccineModal'));
+            viewModal.show();
+        });
+}
+
+// Edit vaccine
+function editVaccine(vaccineId) {
+    fetch(`http://localhost:3000/vaccines/${vaccineId}`)
+        .then(response => response.json())
+        .then(vaccine => {
+            document.getElementById('editVaccineId').value = vaccine.vaccine_id;
+            document.getElementById('editVaccineName').value = vaccine.vaccine_name;
+            document.getElementById('editVaccineType').value = vaccine.type;
+            document.getElementById('editVaccineDosage').value = vaccine.dosage_amount;
+            document.getElementById('editVaccineDoses').value = vaccine.required_doses;
+            document.getElementById('editVaccineSideEffects').value = vaccine.side_effects || '';
+            document.getElementById('editVaccineStorage').value = vaccine.storage_conditions || '';
+
+            const editModal = new bootstrap.Modal(document.getElementById('editVaccineModal'));
+            editModal.show();
+        });
+}
+
+// Delete vaccine
+function deleteVaccine(vaccineId) {
+    const confirmation = confirm(`Are you sure you want to delete Vaccine: ${vaccineId}?`);
+    if (confirmation) {
+        fetch(`http://localhost:3000/vaccines/${vaccineId}`, { method: 'DELETE' })
+            .then(() => fetchVaccines())
+            .catch(error => console.error('Error deleting vaccine:', error));
+    }
+}
+
+document.getElementById('editVaccineForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const vaccineId = document.getElementById('editVaccineId').value;
+    const vaccineName = document.getElementById('editVaccineName').value;
+    const vaccineType = document.getElementById('editVaccineType').value;
+    const dosageAmount = parseFloat(document.getElementById('editVaccineDosage').value);
+    const requiredDoses = parseInt(document.getElementById('editVaccineDoses').value, 10);
+    const sideEffects = document.getElementById('editVaccineSideEffects').value;
+    const storageConditions = document.getElementById('editVaccineStorage').value;
+
+    // Send the update request to the backend
+    fetch(`http://localhost:3000/vaccines/${vaccineId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            vaccine_name: vaccineName,
+            type: vaccineType,
+            dosage_amount: dosageAmount,
+            required_doses: requiredDoses,
+            side_effects: sideEffects,
+            storage_conditions: storageConditions,
+        }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to update vaccine');
+        }
+        return response.text(); // Expecting a plain text response like "OK"
+    })
+    .then(() => {
+        // Close the modal and refresh the vaccine list
+        const editModal = bootstrap.Modal.getInstance(document.getElementById('editVaccineModal'));
+        editModal.hide();
+        fetchVaccines(); // Re-fetch vaccines after the update
+    })
+    .catch(error => {
+        console.error('Error updating vaccine:', error);
+        alert('Failed to update vaccine.');
+    });
+});
+
+
+
+    </script>
+</body>
+</html>

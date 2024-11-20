@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Staff Login</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #f4f4f4;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+				margin: 0;
+			}
+
+			.login-container {
+				background: white;
+				padding: 20px;
+				border-radius: 5px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				width: 300px;
+			}
+
+			h2 {
+				text-align: center;
+				color: #333;
+			}
+
+			.form-group {
+				margin-bottom: 15px;
+			}
+
+			label {
+				display: block;
+				margin-bottom: 5px;
+				font-weight: bold;
+				color: #555;
+			}
+
+			input[type="text"],
+			input[type="password"] {
+				width: 100%;
+				padding: 8px;
+				border: 1px solid #ccc;
+				border-radius: 3px;
+			}
+
+			button {
+				width: 100%;
+				padding: 10px;
+				background-color: #28a745;
+				color: white;
+				border: none;
+				border-radius: 3px;
+				cursor: pointer;
+			}
+
+			button:hover {
+				background-color: #218838;
+			}
+
+			.error-message {
+				color: red;
+				text-align: center;
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="login-container">
+			<h2>Staff Login</h2>
+			<form id="loginForm">
+				<div class="form-group">
+					<label for="userId">User ID:</label>
+					<input
+						type="text"
+						id="userId"
+						placeholder="Enter your User ID"
+						required
+					/>
+				</div>
+				<div class="form-group">
+					<label for="password">Password:</label>
+					<input
+						type="password"
+						id="password"
+						placeholder="Enter your password"
+						required
+					/>
+				</div>
+				<button type="submit">Login</button>
+				<div id="error-message" class="error-message"></div>
+			</form>
+		</div>
+
+		<script>
+			document
+				.getElementById("loginForm")
+				.addEventListener("submit", async function (event) {
+					event.preventDefault(); // Prevent form from submitting
+
+					// Get the user ID and password values
+					const userId = document
+						.getElementById("userId")
+						.value.trim();
+					const password = document
+						.getElementById("password")
+						.value.trim();
+
+					try {
+						const response = await fetch(
+							"http://localhost:3000/staff-login",
+							{
+								method: "POST",
+								headers: {
+									"Content-Type": "application/json",
+								},
+								body: JSON.stringify({ userId, password }),
+							}
+						);
+
+						const result = await response.json();
+
+						if (response.ok) {
+							// Successful login
+							alert("Login successful!");
+
+							// Redirect based on user role
+							if (userId.startsWith("HW")) {
+								localStorage.setItem(
+									"health-worker-id",
+									userId
+								);
+								window.location.href = "healthWorker.html";
+							} else if (userId.startsWith("FM")) {
+								localStorage.setItem(
+									"facility-manager-id",
+									userId
+								);
+								window.location.href = "facilityManager.html";
+							} else {
+								displayError("Invalid user role.");
+							}
+						} else {
+							// Show error message from the backend
+							displayError(
+								result.message || "Invalid User ID or Password."
+							);
+						}
+					} catch (error) {
+						console.error("Error during login:", error);
+						displayError("An error occurred. Please try again.");
+					}
+				});
+
+			// Function to display error messages
+			function displayError(message) {
+				const errorDiv = document.getElementById("error-message");
+				errorDiv.textContent = message; // Set the error message
+			}
+		</script>
+	</body>
+</html>
