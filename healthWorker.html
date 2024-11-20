@@ -1,555 +1,687 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Worker Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #f8f9fa;
-            padding-top: 20px;
-        }
-        .sidebar a {
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 18px;
-            color: #333;
-            display: block;
-        }
-        .sidebar a:hover {
-            background-color: #007bff;
-            color: white;
-        }
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-        .navbar .dropdown-menu {
-            right: 0;
-            left: auto;
-        }
-        .profile-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        #patientList, #logEvent, #inventoryView {
-            display: none; /* Hidden by default */
-        }
-    </style>
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Vaccination Management</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Support</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="./images/user-icon-2046x2048-9pwm22pp.png" alt="Profile" class="profile-icon">
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">My Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a id="logoutButton" class="dropdown-item" href="#">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Health Worker Dashboard</title>
 
-    <!-- Sidebar -->
-<div class="sidebar">
-    <a href="#" onclick="showHome()">Home</a> <!-- New Home link -->
-    <a href="#" onclick="showAllAppointments()">See All Appointments</a>
-    <a href="#" onclick="showLogEvent()">Log Vaccination</a>
-    <a href="#" onclick="showInventory()">View Inventory</a>
-</div>
+		<!-- External CSS Libraries -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
 
+		<style>
+			/* Layout Styles */
+			.sidebar {
+				height: 100vh;
+				width: 250px;
+				position: fixed;
+				top: 0;
+				left: 0;
+				background-color: #f8f9fa;
+				padding-top: 20px;
+			}
+			.sidebar a {
+				padding: 10px 15px;
+				text-decoration: none;
+				font-size: 18px;
+				color: #333;
+				display: block;
+			}
+			.sidebar a:hover {
+				background-color: #007bff;
+				color: white;
+			}
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div id="welcome">
-            <h2 id = "welcomeMessage"></h2>
-        <p>Manage your appointments, patient records, and inventory efficiently.</p>
-        </div>
-        
+			/* Content Area Styles */
+			.main-content {
+				margin-left: 250px;
+				padding: 20px;
+			}
 
-        <!-- Today's Appointments -->
-<div id="todayAppointments">
-    <h3>Today's Appointments</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Patient Name</th>
-                <th>Vaccine</th>
-                <th>Time</th>
-                <th>Remarks</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Appointments will be dynamically inserted here -->
-        </tbody>
-    </table>
-</div>
+			/* Navigation Styles */
+			.navbar .dropdown-menu {
+				right: 0;
+				left: auto;
+			}
+			.profile-icon {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				object-fit: cover;
+			}
 
-        <!-- All Appointments -->
-<div id="allAppointments" style="display: none;">
-    <h3>All Appointments</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Patient Name</th>
-                <th>Vaccine</th>
-                <th>Date</th> <!-- New Date column -->
-                <th>Time</th>
-                <th>Remarks</th> <!-- Removed Facility column -->
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Appointments will be dynamically inserted here -->
-        </tbody>
-    </table>
-</div>
+			/* Section Visibility Control */
+			#patientList,
+			#logEvent,
+			#inventoryView {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Navigation Bar -->
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">Vaccination Management</a>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="#">Support</a>
+						</li>
+						<li class="nav-item dropdown">
+							<a
+								class="nav-link dropdown-toggle"
+								href="#"
+								id="navbarDropdown"
+								role="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+							>
+								<img
+									src="./images/user-icon-2046x2048-9pwm22pp.png"
+									alt="Profile"
+									class="profile-icon"
+								/>
+							</a>
+							<ul
+								class="dropdown-menu"
+								aria-labelledby="navbarDropdown"
+							>
+								<li>
+									<a class="dropdown-item" href="#"
+										>My Profile</a
+									>
+								</li>
+								<li><hr class="dropdown-divider" /></li>
+								<li>
+									<a
+										id="logoutButton"
+										class="dropdown-item"
+										href="#"
+										>Logout</a
+									>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
 
-<!-- Log Event -->
-<div id="logEvent">
-    <h3>Log Vaccination Event</h3>
-    
-    <!-- Vaccination Event Form -->
-    <div id="vaccinationForm">
-        <form id="vaccinationEventForm">
-            <div class="mb-3">
-                <label for="patientId" class="form-label">Patient ID</label>
-                <input type="text" class="form-control" id="patientId" required>
-            </div>
-            <div class="mb-3">
-                <label for="vaccineSelect" class="form-label">Vaccine</label>
-                <select class="form-select" id="vaccineSelect" onchange="populateBatchDropdown(this.value)" required>
-                    <option selected disabled>Choose a Vaccine</option>
-                    <!-- Options will be populated here -->
-                </select>
-            </div>
-            
-            <div class="mb-3">
-                <label for="doseGiven" class="form-label">Dose Given</label>
-                <input type="number" class="form-control" id="doseGiven" required min="1" step="1"> <!-- Accept only numbers -->
-            </div>
-            <div class="mb-3">
-                <label for="batchNumber" class="form-label">Batch Number</label>
-                <select class="form-select" id="batchNumber" required>
-                    <option selected disabled>Choose a Batch</option>
-                    <!-- Options will be populated here -->
-                </select>
-            </div>
-            <div id="statusMessage" style="margin-top: 10px; font-weight: bold;"></div>
-            <button type="submit" class="btn btn-primary">Log Vaccination Event</button>
-        </form>
-    </div>
-</div>
+		<!-- Sidebar Navigation -->
+		<div class="sidebar">
+			<a href="#" onclick="showHome()">Home</a>
+			<a href="#" onclick="showAllAppointments()">See All Appointments</a>
+			<a href="#" onclick="showLogEvent()">Log Vaccination</a>
+			<a href="#" onclick="showInventory()">View Inventory</a>
+		</div>
 
+		<!-- Main Content Area -->
+		<div class="main-content">
+			<!-- Welcome Section -->
+			<div id="welcome">
+				<h2 id="welcomeMessage"></h2>
+				<p>
+					Manage your appointments, patient records, and inventory
+					efficiently.
+				</p>
+			</div>
 
-<script>
-    let healthWorkerId;
-    document.getElementById("vaccinationForm").style.display = "block";
-</script>
-        
+			<!-- Today's Appointments Table -->
+			<div id="todayAppointments">
+				<h3>Today's Appointments</h3>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Patient Name</th>
+							<th>Vaccine</th>
+							<th>Time</th>
+							<th>Remarks</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Appointments will be dynamically inserted here -->
+					</tbody>
+				</table>
+			</div>
 
-        <!-- Inventory View -->
-<div id="inventoryView">
-    <h3>Inventory</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Vaccine Name</th>
-                <th>Available Doses</th>
-                <th>Batch Number</th>
-                <th>Expiration Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Inventory data will be populated here -->
-        </tbody>
-    </table>
-</div>
+			<!-- All Appointments Table -->
+			<div id="allAppointments" style="display: none">
+				<h3>All Appointments</h3>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Patient Name</th>
+							<th>Vaccine</th>
+							<th>Date</th>
+							<th>Time</th>
+							<th>Remarks</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Appointments will be dynamically inserted here -->
+					</tbody>
+				</table>
+			</div>
 
+			<!-- Log Vaccination Event Section -->
+			<div id="logEvent">
+				<h3>Log Vaccination Event</h3>
+				<div id="vaccinationForm">
+					<form id="vaccinationEventForm">
+						<div class="mb-3">
+							<label for="patientId" class="form-label"
+								>Patient ID</label
+							>
+							<input
+								type="text"
+								class="form-control"
+								id="patientId"
+								required
+							/>
+						</div>
+						<div class="mb-3">
+							<label for="vaccineSelect" class="form-label"
+								>Vaccine</label
+							>
+							<select
+								class="form-select"
+								id="vaccineSelect"
+								onchange="populateBatchDropdown(this.value)"
+								required
+							>
+								<option selected disabled>
+									Choose a Vaccine
+								</option>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label for="doseGiven" class="form-label"
+								>Dose Given</label
+							>
+							<input
+								type="number"
+								class="form-control"
+								id="doseGiven"
+								required
+								min="1"
+								step="1"
+							/>
+						</div>
+						<div class="mb-3">
+							<label for="batchNumber" class="form-label"
+								>Batch Number</label
+							>
+							<select
+								class="form-select"
+								id="batchNumber"
+								required
+							>
+								<option selected disabled>
+									Choose a Batch
+								</option>
+							</select>
+						</div>
+						<div
+							id="statusMessage"
+							style="margin-top: 10px; font-weight: bold"
+						></div>
+						<button type="submit" class="btn btn-primary">
+							Log Vaccination Event
+						</button>
+					</form>
+				</div>
+			</div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+			<!-- Inventory View Section -->
+			<div id="inventoryView">
+				<h3>Inventory</h3>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Vaccine Name</th>
+							<th>Available Doses</th>
+							<th>Batch Number</th>
+							<th>Expiration Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Inventory data will be populated here -->
+					</tbody>
+				</table>
+			</div>
+		</div>
 
-    <!-- Script to toggle between sections -->
-    <script>
+		<!-- Bootstrap JS -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-function showHome() {
-    document.getElementById('welcome').style.display = 'block'; // Show the welcome message
-    document.getElementById('todayAppointments').style.display = 'block'; // Show today's appointments
-    document.getElementById('allAppointments').style.display = 'none'; // Hide all appointments
-    document.getElementById('logEvent').style.display = 'none'; // Hide log event
-    document.getElementById('inventoryView').style.display = 'none'; // Hide inventory view
-}
+		<script>
+			// Global Variables
+			let healthWorkerId;
 
+			// View Management Functions
+			function showHome() {
+				document.getElementById("welcome").style.display = "block";
+				document.getElementById("todayAppointments").style.display =
+					"block";
+				document.getElementById("allAppointments").style.display =
+					"none";
+				document.getElementById("logEvent").style.display = "none";
+				document.getElementById("inventoryView").style.display = "none";
+			}
 
-        function showAllAppointments() {
-            fetchAllAppointments(healthWorkerId);
-            document.getElementById('todayAppointments').style.display = 'none';
-            document.getElementById('allAppointments').style.display = 'block';
-            document.getElementById('logEvent').style.display = 'none';
-            document.getElementById('inventoryView').style.display = 'none';
-            document.getElementById('welcome').style.display = 'none';
-        }
+			function showAllAppointments() {
+				fetchAllAppointments(healthWorkerId);
+				document.getElementById("todayAppointments").style.display =
+					"none";
+				document.getElementById("allAppointments").style.display =
+					"block";
+				document.getElementById("logEvent").style.display = "none";
+				document.getElementById("inventoryView").style.display = "none";
+				document.getElementById("welcome").style.display = "none";
+			}
 
-        function showLogEvent() {
-            document.getElementById('todayAppointments').style.display = 'none';
-            document.getElementById('logEvent').style.display = 'block';
-            document.getElementById('inventoryView').style.display = 'none';
-            document.getElementById('welcome').style.display = 'none';
-            document.getElementById('allAppointments').style.display = 'none';
-        }
+			function showLogEvent() {
+				document.getElementById("todayAppointments").style.display =
+					"none";
+				document.getElementById("logEvent").style.display = "block";
+				document.getElementById("inventoryView").style.display = "none";
+				document.getElementById("welcome").style.display = "none";
+				document.getElementById("allAppointments").style.display =
+					"none";
 
-        function showInventory() {
-            document.getElementById('todayAppointments').style.display = 'none';
-            document.getElementById('logEvent').style.display = 'none';
-            document.getElementById('inventoryView').style.display = 'block';
-            document.getElementById('welcome').style.display = 'none';
-            document.getElementById('allAppointments').style.display = 'none';
-        }
+				// Populate dropdowns when Log Event form is displayed
+				populateVaccineDropdown();
+				populateBatchDropdown();
+			}
 
-        // Function to fetch inventory data
-        async function fetchInventory() {
-            try {
-                console.log("Health Worker ID:", healthWorkerId);
-                const response = await fetch(`http://localhost:3000/inventory/${healthWorkerId}`);
-                if (!response.ok) throw new Error('Network response was not ok');
-                const inventoryData = await response.json();
-                console.log("Inventory Data:", inventoryData); // Inspect the data structure here
-                populateInventoryTable(inventoryData);
-            } catch (error) {
-                console.error('Error fetching inventory:', error);
-            }
-        }
+			function showInventory() {
+				document.getElementById("todayAppointments").style.display =
+					"none";
+				document.getElementById("logEvent").style.display = "none";
+				document.getElementById("inventoryView").style.display =
+					"block";
+				document.getElementById("welcome").style.display = "none";
+				document.getElementById("allAppointments").style.display =
+					"none";
+			}
 
-        function populateInventoryTable(data) {
-    const tableBody = document.querySelector('#inventoryView tbody');
-    tableBody.innerHTML = ''; // Clear existing rows
+			// Data Fetching and Population Functions
+			async function fetchInventory() {
+				try {
+					const response = await fetch(
+						`http://localhost:3000/inventory/${healthWorkerId}`
+					);
+					if (!response.ok)
+						throw new Error("Network response was not ok");
 
-    data.forEach(item => {
-        const row = document.createElement('tr');
+					const inventoryData = await response.json();
+					populateInventoryTable(inventoryData);
+				} catch (error) {
+					console.error("Error fetching inventory:", error);
+				}
+			}
 
-        // Create a Date object from the expiry_date
-        const expiryDate = new Date(item.expiry_date);
-        
-        // Adjust for any timezone offset by using UTC methods to ensure the date doesn't shift
-        const adjustedDate = new Date(expiryDate);
-        adjustedDate.setMinutes(expiryDate.getMinutes() - expiryDate.getTimezoneOffset());
+			function populateInventoryTable(data) {
+				const tableBody = document.querySelector(
+					"#inventoryView tbody"
+				);
+				tableBody.innerHTML = "";
 
-        // Format the adjusted date to YYYY-MM-DD
-        const formattedDate = adjustedDate.toISOString().split('T')[0];
+				data.forEach((item) => {
+					const row = document.createElement("tr");
+					const adjustedDate = new Date(item.expiry_date);
+					adjustedDate.setMinutes(
+						adjustedDate.getMinutes() -
+							adjustedDate.getTimezoneOffset()
+					);
+					const formattedDate = adjustedDate
+						.toISOString()
+						.split("T")[0];
 
-        row.innerHTML = `
-            <td>${item.vaccine_name}</td>
-            <td>${item.available_doses}</td>
-            <td>${item.batch_number}</td>
-            <td>${formattedDate}</td>
-        `;
-        tableBody.appendChild(row);
-    });
-}
-        // Set default view to Today's Appointments
-        //showAllAppointments();
-        document.addEventListener('DOMContentLoaded', () => {
-            // Retrieve the health worker ID from localStorage
-            healthWorkerId = localStorage.getItem('health-worker-id');
-            console.log("getting",healthWorkerId)
-            if (healthWorkerId) {
-                // Fetch the health worker's name from the server
-                fetch(`http://localhost:3000/health-worker/${healthWorkerId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.first_name && data.last_name) {
-                            document.getElementById('welcomeMessage').textContent = `Welcome, ${data.first_name} ${data.last_name}`;
-                        } else {
-                            document.getElementById('welcomeMessage').textContent = "Welcome, Health Worker";
-                        }
-                        showHome(); // Show the home view when the page loads
-                    })
-                    .catch(error => {
-                        console.error('Error fetching health worker details:', error);
-                        document.getElementById('welcomeMessage').textContent = "Welcome, Health Worker";
-                        showHome(); // Show the home view when the page loads
-                    });
-            } else {
-                document.getElementById('welcomeMessage').textContent = "Welcome, Health Worker";
-                showHome(); // Show the home view when the page loads
-            }
-        
-        
-
-
-    // Function to populate the inventory table
-
-
-
-    // Call fetchInventory function with the appropriate health worker ID
-    console.log("abc", healthWorkerId)
-    fetchInventory();
-       
-
-        });
-
-
-        async function fetchTodaysAppointments(healthWorkerId) {
-    try {
-        console.log(healthWorkerId);
-        const response = await fetch(`http://localhost:3000/appointments/today/${healthWorkerId}`);
-        const appointments = await response.json();
-
-        const tbody = document.querySelector('#todayAppointments tbody');
-        tbody.innerHTML = ''; // Clear previous appointments
-
-        // Check if there are appointments for today
-        if (appointments.length === 0) {
-            // No appointments today, display a message
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td colspan="4" class="text-center">No appointments today</td>
+					row.innerHTML = `
+                <td>${item.vaccine_name}</td>
+                <td>${item.available_doses}</td>
+                <td>${item.batch_number}</td>
+                <td>${formattedDate}</td>
             `;
-            tbody.appendChild(row);
-        } else {
-            // Insert appointments into the table
-            appointments.forEach(appointment => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+					tableBody.appendChild(row);
+				});
+			}
+
+			// Event Listeners and Initial Setup
+			document.addEventListener("DOMContentLoaded", () => {
+				healthWorkerId = localStorage.getItem("health-worker-id");
+
+				if (healthWorkerId) {
+					fetch(
+						`http://localhost:3000/health-worker/${healthWorkerId}`
+					)
+						.then((response) => response.json())
+						.then((data) => {
+							const name =
+								data.first_name && data.last_name
+									? `${data.first_name} ${data.last_name}`
+									: "Health Worker";
+							document.getElementById(
+								"welcomeMessage"
+							).textContent = `Welcome, ${name}`;
+							showHome();
+							fetchInventory();
+						})
+						.catch((error) => {
+							console.error(
+								"Error fetching health worker details:",
+								error
+							);
+							document.getElementById(
+								"welcomeMessage"
+							).textContent = "Welcome, Health Worker";
+							showHome();
+							fetchInventory();
+						});
+				} else {
+					document.getElementById("welcomeMessage").textContent =
+						"Welcome, Health Worker";
+					showHome();
+					fetchInventory();
+				}
+			});
+
+			// Fetch today's appointments for a health worker
+			async function fetchTodaysAppointments(healthWorkerId) {
+				try {
+					console.log(healthWorkerId);
+					const response = await fetch(
+						`http://localhost:3000/appointments/today/${healthWorkerId}`
+					);
+					const appointments = await response.json();
+
+					const tbody = document.querySelector(
+						"#todayAppointments tbody"
+					);
+					tbody.innerHTML = ""; // Clear previous appointments
+
+					// Check if there are appointments for today
+					if (appointments.length === 0) {
+						const row = document.createElement("tr");
+						row.innerHTML = `
+                    <td colspan="4" class="text-center">No appointments today</td>
+                `;
+						tbody.appendChild(row);
+					} else {
+						// Populate the table with today's appointments
+						appointments.forEach((appointment) => {
+							const row = document.createElement("tr");
+							row.innerHTML = `
+                        <td>${appointment.patient_name}</td>
+                        <td>${appointment.vaccine_name}</td>
+                        <td>${appointment.time_slot}</td>
+                        <td>${appointment.comments}</td>
+                    `;
+							tbody.appendChild(row);
+						});
+					}
+				} catch (error) {
+					console.error("Error fetching appointments:", error);
+				}
+			}
+
+			// Fetch all appointments for a health worker
+			async function fetchAllAppointments(healthWorkerId) {
+				try {
+					const response = await fetch(
+						`http://localhost:3000/appointments/${healthWorkerId}`
+					);
+					const appointments = await response.json();
+
+					const tbody = document.querySelector(
+						"#allAppointments tbody"
+					);
+					tbody.innerHTML = ""; // Clear previous appointments
+
+					appointments.forEach((appointment) => {
+						const date = new Date(appointment.appointment_date);
+						const formattedDate = `${date.getDate()}/${
+							date.getMonth() + 1
+						}/${date.getFullYear()}`;
+
+						const row = document.createElement("tr");
+						row.innerHTML = `
                     <td>${appointment.patient_name}</td>
                     <td>${appointment.vaccine_name}</td>
+                    <td>${formattedDate}</td>
                     <td>${appointment.time_slot}</td>
                     <td>${appointment.comments}</td>
                 `;
-                tbody.appendChild(row);
-            });
-        }
-    } catch (error) {
-        console.error('Error fetching appointments:', error);
-    }
-}
+						tbody.appendChild(row);
+					});
+				} catch (error) {
+					console.error("Error fetching all appointments:", error);
+				}
+			}
 
+			// On page load, fetch today's appointments
+			window.onload = function () {
+				console.log("Page loaded");
+				fetchTodaysAppointments(healthWorkerId);
+			};
 
+			// Populate vaccine dropdown from inventory
+			async function populateVaccineDropdown() {
+				try {
+					const response = await fetch(
+						`http://localhost:3000/distinct/${healthWorkerId}`
+					);
+					const vaccines = await response.json();
+					const vaccineSelect =
+						document.getElementById("vaccineSelect");
 
-    async function fetchAllAppointments(healthWorkerId) {
-    try {
-        const response = await fetch(`http://localhost:3000/appointments/${healthWorkerId}`);
-        const appointments = await response.json();
+					// Reset dropdown options
+					vaccineSelect.innerHTML =
+						"<option selected disabled>Choose a Vaccine</option>";
 
-        const tbody = document.querySelector('#allAppointments tbody');
-        tbody.innerHTML = ''; // Clear previous appointments
+					vaccines.forEach((vaccine) => {
+						const option = document.createElement("option");
+						option.value = vaccine.vaccine_id;
+						option.textContent = vaccine.vaccine_name;
+						vaccineSelect.appendChild(option);
+					});
+				} catch (error) {
+					console.error("Error fetching vaccines:", error);
+				}
+			}
 
-        appointments.forEach(appointment => {
-            const date = new Date(appointment.appointment_date);
-            const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`; // Change this format as needed
+			// Populate batch dropdown based on selected vaccine
+			async function populateBatchDropdown(vaccineId) {
+				try {
+					const response = await fetch(
+						`http://localhost:3000/batches/${healthWorkerId}?vaccineId=${vaccineId}`
+					);
+					const batches = await response.json();
+					const batchSelect = document.getElementById("batchNumber");
 
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${appointment.patient_name}</td>
-                <td>${appointment.vaccine_name}</td>
-                <td>${formattedDate}</td> <!-- Use the formatted date here -->
-                <td>${appointment.time_slot}</td>
-                <td>${appointment.comments}</td>
-            `;
-            tbody.appendChild(row);
-        });
-    } catch (error) {
-        console.error('Error fetching all appointments:', error);
-    }
-}
+					// Reset dropdown options
+					batchSelect.innerHTML = "";
 
+					batches.forEach((batch) => {
+						const option = document.createElement("option");
+						option.value = batch.batch_number;
+						option.textContent = batch.batch_number;
+						batchSelect.appendChild(option);
+					});
+				} catch (error) {
+					console.error("Error fetching batches:", error);
+				}
+			}
 
+			// Display log vaccination event form
+			function showLogEvent() {
+				document.getElementById("todayAppointments").style.display =
+					"none";
+				document.getElementById("logEvent").style.display = "block";
+				document.getElementById("inventoryView").style.display = "none";
+				document.getElementById("welcome").style.display = "none";
+				document.getElementById("allAppointments").style.display =
+					"none";
 
-    // Call this function with the health worker ID when the page loads
-    window.onload = function() {
-        console.log("yes")
-        fetchTodaysAppointments(healthWorkerId);
-    };
+				// Populate dropdowns when form is displayed
+				populateVaccineDropdown();
+				populateBatchDropdown();
+			}
 
-    // Populate vaccine dropdown from inventory based on health worker
-    async function populateVaccineDropdown() {
-        try {
-            const response = await fetch(`http://localhost:3000/distinct/${healthWorkerId}`); // Endpoint to get vaccines based on health worker
-            const vaccines = await response.json();
-            const vaccineSelect = document.getElementById('vaccineSelect');
+			// Logout button functionality
+			document
+				.getElementById("logoutButton")
+				.addEventListener("click", function () {
+					sessionStorage.clear(); // Clear session data if needed
+					window.location.href = "staff-login.html"; // Redirect to login page
+				});
 
-            // Clear existing options and add the default "Choose a Vaccine" option
-            vaccineSelect.innerHTML = '<option selected disabled>Choose a Vaccine</option>';
+			// Handle vaccination event form submission
+			document
+				.getElementById("vaccinationEventForm")
+				.addEventListener("submit", async (event) => {
+					event.preventDefault();
 
-            vaccines.forEach(vaccine => {
-                const option = document.createElement('option');
-                option.value = vaccine.vaccine_id; // Use vaccine_id for submission
-                option.textContent = vaccine.vaccine_name; // Display vaccine name
-                vaccineSelect.appendChild(option);
-            });
-        } catch (error) {
-            console.error('Error fetching vaccines:', error);
-        }
-    }
+					const patientId = document
+						.getElementById("patientId")
+						.value.trim();
+					const vaccineId =
+						document.getElementById("vaccineSelect").value;
+					const doseGiven = parseInt(
+						document.getElementById("doseGiven").value,
+						10
+					);
+					const batchNumber =
+						document.getElementById("batchNumber").value;
+					const statusMessage =
+						document.getElementById("statusMessage");
 
+					// Reset status message
+					statusMessage.textContent = "";
+					statusMessage.style.color = "";
 
-    async function populateBatchDropdown(vaccineId) {
-        try {
-            const response = await fetch(`http://localhost:3000/batches/${healthWorkerId}?vaccineId=${vaccineId}`); // Pass vaccineId as query parameter
-            const batches = await response.json();
-            const batchSelect = document.getElementById('batchNumber');
+					// Validate inputs
+					if (
+						!patientId ||
+						!vaccineId ||
+						!batchNumber ||
+						isNaN(doseGiven) ||
+						doseGiven <= 0
+					) {
+						statusMessage.textContent =
+							"All fields are required, and dose must be greater than zero.";
+						statusMessage.style.color = "red";
+						return;
+					}
 
-            // Clear existing options
-            batchSelect.innerHTML = '';
+					try {
+						// Check if patient exists
+						const patientCheck = await fetch(
+							`http://localhost:3000/patientCheck/${patientId}`
+						);
+						if (!patientCheck.ok) {
+							const error = await patientCheck.json();
+							statusMessage.textContent = `Error: ${
+								error.message || "Patient not found."
+							}`;
+							statusMessage.style.color = "red";
+							return;
+						}
 
-            batches.forEach(batch => {
-                const option = document.createElement('option');
-                option.value = batch.batch_number; // Assuming batch_number is the unique identifier
-                option.textContent = batch.batch_number; // Display batch number
-                batchSelect.appendChild(option);
-            });
-        } catch (error) {
-            console.error('Error fetching batches:', error);
-        }
-    }
+						// Check inventory availability
+						const inventoryCheck = await fetch(
+							`http://localhost:3000/inventory/check`,
+							{
+								method: "POST",
+								headers: { "Content-Type": "application/json" },
+								body: JSON.stringify({
+									batchNumber,
+									doseGiven,
+								}),
+							}
+						);
 
+						const inventoryResult = await inventoryCheck.json();
+						if (!inventoryCheck.ok) {
+							statusMessage.textContent = `Error: ${
+								inventoryResult.error || "Insufficient stock."
+							}`;
+							statusMessage.style.color = "red";
+							return;
+						}
 
-    // Call the population functions when the vaccination form is shown
-    function showLogEvent() {
-        document.getElementById('todayAppointments').style.display = 'none';
-        document.getElementById('logEvent').style.display = 'block';
-        document.getElementById('inventoryView').style.display = 'none';
-        document.getElementById('welcome').style.display = 'none';
-        document.getElementById('allAppointments').style.display = 'none';
+						// Log vaccination event
+						const payload = {
+							patient_id: patientId,
+							vaccine_id: vaccineId,
+							health_worker_id: healthWorkerId,
+							vaccination_date: new Date()
+								.toISOString()
+								.split("T")[0],
+							dose_given: doseGiven,
+							batch_number: batchNumber,
+						};
 
-        // Populate the dropdowns when the Log Event form is displayed
-        populateVaccineDropdown();
-        populateBatchDropdown();
-    }
+						const vaccinationResponse = await fetch(
+							"http://localhost:3000/vaccination",
+							{
+								method: "POST",
+								headers: { "Content-Type": "application/json" },
+								body: JSON.stringify(payload),
+							}
+						);
 
-document.getElementById("logoutButton").addEventListener("click", function() {
-    // Perform any logout tasks you need, such as clearing session storage or cookies
-    // Example: sessionStorage.clear();  // Clears session data (if needed)
+						if (vaccinationResponse.ok) {
+							const inventoryUpdateResponse = await fetch(
+								"http://localhost:3000/inventory/update",
+								{
+									method: "POST",
+									headers: {
+										"Content-Type": "application/json",
+									},
+									body: JSON.stringify({
+										batchNumber,
+										doseGiven,
+									}),
+								}
+							);
 
-    // Redirect to staff-login.html
-    window.location.href = "staff-login.html";
-});
-
-document.getElementById("vaccinationEventForm").addEventListener("submit", async (event) => {
-    event.preventDefault(); // Prevent default form submission
-
-    const patientId = document.getElementById("patientId").value.trim();
-    const vaccineId = document.getElementById("vaccineSelect").value;
-    const doseGiven = parseInt(document.getElementById("doseGiven").value, 10);
-    const batchNumber = document.getElementById("batchNumber").value;
-    const statusMessage = document.getElementById("statusMessage");
-
-    // Clear previous messages
-    statusMessage.textContent = '';
-    statusMessage.style.color = '';
-
-    // Validate form inputs
-    if (!patientId) {
-        statusMessage.textContent = 'Patient ID is required.';
-        statusMessage.style.color = 'red';
-        return;
-    }
-
-    if (!vaccineId || !batchNumber || isNaN(doseGiven) || doseGiven <= 0) {
-        statusMessage.textContent = 'All fields are required, and dose must be greater than zero.';
-        statusMessage.style.color = 'red';
-        return;
-    }
-
-    try {
-        // Check if the patient exists
-        const patientCheck = await fetch(`http://localhost:3000/patientCheck/${patientId}`);
-        if (!patientCheck.ok) {
-            const error = await patientCheck.json();
-            statusMessage.textContent = `Error: ${error.message || 'Patient not found.'}`;
-            statusMessage.style.color = 'red';
-            return;
-        }
-
-        // Check inventory availability
-        const inventoryCheck = await fetch(`http://localhost:3000/inventory/check`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ batchNumber, doseGiven })
-        });
-
-        const inventoryResult = await inventoryCheck.json();
-        if (!inventoryCheck.ok) {
-            statusMessage.textContent = `Error: ${inventoryResult.error || 'Insufficient stock.'}`;
-            statusMessage.style.color = 'red';
-            return;
-        }
-
-        // Proceed with vaccination event logging
-        const payload = {
-            patient_id: patientId,
-            vaccine_id: vaccineId,
-            health_worker_id: healthWorkerId,
-            vaccination_date: new Date().toISOString().split('T')[0],
-            dose_given: doseGiven,
-            batch_number: batchNumber
-        };
-
-        const vaccinationResponse = await fetch('http://localhost:3000/vaccination', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (vaccinationResponse.ok) {
-            // Vaccination event logged successfully, now update inventory
-            const inventoryUpdateResponse = await fetch('http://localhost:3000/inventory/update', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ batchNumber, doseGiven })
-            });
-
-            if (inventoryUpdateResponse.ok) {
-                statusMessage.textContent = 'Vaccination event logged and inventory updated successfully!';
-                statusMessage.style.color = 'green';
-
-                // Optionally reset the form
-                document.getElementById("vaccinationEventForm").reset();
-                fetchInventory(); // Refresh inventory display
-            } else {
-                const inventoryUpdateError = await inventoryUpdateResponse.json();
-                statusMessage.textContent = `Error: ${inventoryUpdateError.error || 'Failed to update inventory.'}`;
-                statusMessage.style.color = 'red';
-            }
-        } else {
-            const error = await vaccinationResponse.json();
-            statusMessage.textContent = `Error: ${error.message || 'Failed to log vaccination event.'}`;
-            statusMessage.style.color = 'red';
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        statusMessage.textContent = 'An unexpected error occurred. Please try again.';
-        statusMessage.style.color = 'red';
-    }
-});
-
-    
-    </script>
-</body>
+							if (inventoryUpdateResponse.ok) {
+								statusMessage.textContent =
+									"Vaccination event logged and inventory updated successfully!";
+								statusMessage.style.color = "green";
+								document
+									.getElementById("vaccinationEventForm")
+									.reset();
+								fetchInventory(); // Refresh inventory display
+							} else {
+								const inventoryUpdateError =
+									await inventoryUpdateResponse.json();
+								statusMessage.textContent = `Error: ${
+									inventoryUpdateError.error ||
+									"Failed to update inventory."
+								}`;
+								statusMessage.style.color = "red";
+							}
+						} else {
+							const error = await vaccinationResponse.json();
+							statusMessage.textContent = `Error: ${
+								error.message ||
+								"Failed to log vaccination event."
+							}`;
+							statusMessage.style.color = "red";
+						}
+					} catch (error) {
+						console.error("Error:", error);
+						statusMessage.textContent =
+							"An unexpected error occurred. Please try again.";
+						statusMessage.style.color = "red";
+					}
+				});
+		</script>
+	</body>
 </html>
