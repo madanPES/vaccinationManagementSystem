@@ -1,542 +1,986 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facility Manager Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Facility Manager Dashboard</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .action-icon {
-        margin: 0 10px;
-        cursor: pointer;
-    }
-    .fa-eye:hover {
-        color: blue;
-    }
-    .fa-edit:hover {
-        color: orange;
-    }
-    .fa-trash:hover {
-        color: red;
-    }
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #f8f9fa;
-            padding-top: 20px;
-        }
-        .sidebar a {
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 18px;
-            color: #333;
-            display: block;
-        }
-        .sidebar a:hover {
-            background-color: #007bff;
-            color: white;
-        }
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-        }
-        .navbar .dropdown-menu {
-            right: 0;
-            left: auto;
-        }
-        .profile-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        #manageHealthWorkers, #manageInventory, #facilityInfo, #viewAllAppointments {
-            display: none; /* Hidden by default */
-        }
-    </style>
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Vaccination Management</a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="./images/user-icon-2046x2048-9pwm22pp.png" alt="Profile" class="profile-icon">
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">My Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a id= "logoutButton" class="dropdown-item" href="#">Logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+		/>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+		/>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <a href="#" onclick="showHome()">Home</a>
-        <a href="#" onclick="showManageHealthWorkers()">Manage Health Workers</a>
-        <a href="#" onclick="showManageInventory()">Manage Inventory</a>
-        <a href="#" onclick="showFacilityInfo()">Facility Info</a>
-        <a href="#" onclick="showViewAllAppointments()">View All Appointments</a>
-    </div>
+		<style>
+			.action-icon {
+				margin: 0 10px;
+				cursor: pointer;
+			}
+			.fa-eye:hover {
+				color: blue;
+			}
+			.fa-edit:hover {
+				color: orange;
+			}
+			.fa-trash:hover {
+				color: red;
+			}
+			.sidebar {
+				height: 100vh;
+				width: 250px;
+				position: fixed;
+				top: 0;
+				left: 0;
+				background-color: #f8f9fa;
+				padding-top: 20px;
+			}
+			.sidebar a {
+				padding: 10px 15px;
+				text-decoration: none;
+				font-size: 18px;
+				color: #333;
+				display: block;
+			}
+			.sidebar a:hover {
+				background-color: #007bff;
+				color: white;
+			}
+			.main-content {
+				margin-left: 250px;
+				padding: 20px;
+			}
+			.navbar .dropdown-menu {
+				right: 0;
+				left: auto;
+			}
+			.profile-icon {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				object-fit: cover;
+			}
+			#manageHealthWorkers,
+			#manageInventory,
+			#facilityInfo,
+			#viewAllAppointments {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Navbar -->
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">Vaccination Management</a>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item dropdown">
+							<a
+								class="nav-link dropdown-toggle"
+								href="#"
+								id="navbarDropdown"
+								role="button"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+							>
+								<img
+									src="./images/user-icon-2046x2048-9pwm22pp.png"
+									alt="Profile"
+									class="profile-icon"
+								/>
+							</a>
+							<ul
+								class="dropdown-menu"
+								aria-labelledby="navbarDropdown"
+							>
+								<li>
+									<a class="dropdown-item" href="#"
+										>My Profile</a
+									>
+								</li>
+								<li><hr class="dropdown-divider" /></li>
+								<li>
+									<a
+										id="logoutButton"
+										class="dropdown-item"
+										href="#"
+										>Logout</a
+									>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <div id="Home">
-            <h2 id="welcomeMessage">Welcome, </h2>
-            <p>Manage health workers, inventory, and appointments efficiently.</p>
-        
-            <div class="row">
-                <!-- Inventory Alerts Section (Above) -->
-                <!-- <div class="col-12">
-                    <h3>Inventory Alerts</h3>
-                    <ul id="inventoryAlerts" class="list-group"> -->
-                        <!-- Dynamic inventory alerts will be populated here -->
-                    <!-- </ul>
-                </div> -->
-        
-                <!-- Today's Appointments Section (Updated) -->
-<div class="col-12">
-    <h3>Today's Appointments</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Appointment ID</th>
-                <th>Patient Name</th>
-                <th>Health Worker Name</th>  <!-- Add column for health worker name -->
-                <th>Vaccine Name</th>
-                <th>Time Slot</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody id="todaysAppointmentsTableBody">
-            <!-- Dynamic rows for today's appointments will be populated here -->
-        </tbody>
-    </table>
-</div>
+		<!-- Sidebar -->
+		<div class="sidebar">
+			<a href="#" onclick="showHome()">Home</a>
+			<a href="#" onclick="showManageHealthWorkers()"
+				>Manage Health Workers</a
+			>
+			<a href="#" onclick="showManageInventory()">Manage Inventory</a>
+			<a href="#" onclick="showFacilityInfo()">Facility Info</a>
+			<a href="#" onclick="showViewAllAppointments()"
+				>View All Appointments</a
+			>
+		</div>
 
-            </div>
-        </div>
-        
-        
+		<!-- Main Content -->
+		<div class="main-content">
+			<div id="Home">
+				<h2 id="welcomeMessage">Welcome,</h2>
+				<p>
+					Manage health workers, inventory, and appointments
+					efficiently.
+				</p>
 
-<!-- Manage Health Workers Section -->
-<div id="manageHealthWorkers" class="container">
-    <h2>Manage Health Workers</h2>
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addHealthWorkerModal">Add Health Worker</button>
-    
-    <table id="healthWorkersTable" class="table">
-        <thead>
-            <tr>
-                <th>Health Worker ID</th>
-                <th>Health Worker Name</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="healthWorkersTableBody">
-            <!-- Rows will be populated dynamically -->
-        </tbody>
-    </table>
-    <!-- Add/Edit Health Worker Modal -->
-<div class="modal fade" id="editHealthWorkerModal" tabindex="-1" aria-labelledby="editHealthWorkerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editHealthWorkerModalLabel">Edit Health Worker</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editHealthWorkerForm">
-                    <input type="hidden" id="editHealthWorkerId">
-                    <div class="mb-3">
-                        <label for="editFirstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="editFirstName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editLastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="editLastName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="editEmail" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editPhone" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="editPhone" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editAddress" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="editAddress">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editFacilityId" class="form-label">Facility ID</label>
-                        <input type="number" class="form-control" id="editFacilityId">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-    <!-- Add Health Worker Modal -->
-<div class="modal fade" id="addHealthWorkerModal" tabindex="-1" aria-labelledby="addHealthWorkerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addHealthWorkerModalLabel">Add Health Worker</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addHealthWorkerForm">
-                    <div class="mb-3">
-                        <label for="hwIdAdd" class="form-label">Health Worker ID</label>
-                        <input type="text" class="form-control" id="hwIdAdd" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="hwFirstNameAdd" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="hwFirstNameAdd" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="hwLastNameAdd" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="hwLastNameAdd" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="hwEmailAdd" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="hwEmailAdd" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="hwPhoneAdd" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="hwPhoneAdd" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="hwAddressAdd" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="hwAddressAdd">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+				<div class="row">
+					<div class="col-12">
+						<h3>Today's Appointments</h3>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Appointment ID</th>
+									<th>Patient Name</th>
+									<th>Health Worker Name</th>
+									<th>Vaccine Name</th>
+									<th>Time Slot</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody id="todaysAppointmentsTableBody">
+								<!-- Dynamic rows for today's appointments will be populated here -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 
-    <!-- View Health Worker Modal -->
-<div class="modal fade" id="viewHealthWorkerModal" tabindex="-1" aria-labelledby="viewHealthWorkerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewHealthWorkerModalLabel">Health Worker Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>ID:</strong> <span id="hwId"></span></p>
-                <p><strong>Name:</strong> <span id="hwName"></span></p>
-                <p><strong>Email:</strong> <span id="hwEmail"></span></p>
-                <p><strong>Phone:</strong> <span id="hwPhone"></span></p>
-                <p><strong>Address:</strong> <span id="hwAddress"></span></p>
-                <!-- Add other details you want to display -->
-            </div>
-        </div>
-    </div>
-</div>
+			<!-- Manage Health Workers Section -->
+			<div id="manageHealthWorkers" class="container">
+				<h2>Manage Health Workers</h2>
+				<button
+					class="btn btn-primary mb-3"
+					data-bs-toggle="modal"
+					data-bs-target="#addHealthWorkerModal"
+				>
+					Add Health Worker
+				</button>
 
-</div>
+				<table id="healthWorkersTable" class="table">
+					<thead>
+						<tr>
+							<th>Health Worker ID</th>
+							<th>Health Worker Name</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="healthWorkersTableBody">
+						<!-- Rows will be populated dynamically -->
+					</tbody>
+				</table>
 
+				<!-- Edit Health Worker Modal -->
+				<div
+					class="modal fade"
+					id="editHealthWorkerModal"
+					tabindex="-1"
+					aria-labelledby="editHealthWorkerModalLabel"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5
+									class="modal-title"
+									id="editHealthWorkerModalLabel"
+								>
+									Edit Health Worker
+								</h5>
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"
+								></button>
+							</div>
+							<div class="modal-body">
+								<form id="editHealthWorkerForm">
+									<input
+										type="hidden"
+										id="editHealthWorkerId"
+									/>
+									<div class="mb-3">
+										<label
+											for="editFirstName"
+											class="form-label"
+											>First Name</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="editFirstName"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="editLastName"
+											class="form-label"
+											>Last Name</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="editLastName"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="editEmail"
+											class="form-label"
+											>Email</label
+										>
+										<input
+											type="email"
+											class="form-control"
+											id="editEmail"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="editPhone"
+											class="form-label"
+											>Phone Number</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="editPhone"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="editAddress"
+											class="form-label"
+											>Address</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="editAddress"
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="editFacilityId"
+											class="form-label"
+											>Facility ID</label
+										>
+										<input
+											type="number"
+											class="form-control"
+											id="editFacilityId"
+										/>
+									</div>
+									<button
+										type="submit"
+										class="btn btn-primary"
+									>
+										Save
+									</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
 
-        <!-- Manage Inventory -->
-            <div id="manageInventory" class="container">
-                <h3>Manage Inventory</h3>
-                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addInventoryModal">Add Inventory</button>
-            
-                <table id="inventoryTable" class="table">
-                    <thead>
-                        <tr>
-                            <th>Batch ID</th>
-                            <th>Vaccine Name</th>
-                            <th>Quantity</th>
-                            <th>Expiry Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventoryTableBody">
-                        <!-- Rows will be populated dynamically -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Edit Inventory Modal -->
-            <!-- Edit Inventory Modal -->
-<div class="modal fade" id="editInventoryModal" tabindex="-1" aria-labelledby="editInventoryModalLabel">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editInventoryModalLabel">Edit Inventory</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editInventoryForm">
-                    <!-- Displaying Batch ID -->
-                    <div class="mb-3">
-                        <label for="editBatchID" class="form-label">Batch ID</label>
-                        <input type="text" class="form-control" id="editBatchID" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editVaccineName" class="form-label">Vaccine Name</label>
-                        <select id="editVaccineName" class="form-select" required></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editQuantity" class="form-label">Quantity</label>
-                        <input type="number" class="form-control" id="editQuantity" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editExpiryDate" class="form-label">Expiry Date</label>
-                        <input type="date" class="form-control" id="editExpiryDate" required>
-                    </div>  
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+				<!-- Add Health Worker Modal -->
+				<div
+					class="modal fade"
+					id="addHealthWorkerModal"
+					tabindex="-1"
+					aria-labelledby="addHealthWorkerModalLabel"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5
+									class="modal-title"
+									id="addHealthWorkerModalLabel"
+								>
+									Add Health Worker
+								</h5>
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"
+								></button>
+							</div>
+							<div class="modal-body">
+								<form id="addHealthWorkerForm">
+									<div class="mb-3">
+										<label for="hwIdAdd" class="form-label"
+											>Health Worker ID</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="hwIdAdd"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="hwFirstNameAdd"
+											class="form-label"
+											>First Name</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="hwFirstNameAdd"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="hwLastNameAdd"
+											class="form-label"
+											>Last Name</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="hwLastNameAdd"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="hwEmailAdd"
+											class="form-label"
+											>Email</label
+										>
+										<input
+											type="email"
+											class="form-control"
+											id="hwEmailAdd"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="hwPhoneAdd"
+											class="form-label"
+											>Phone Number</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="hwPhoneAdd"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="hwAddressAdd"
+											class="form-label"
+											>Address</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="hwAddressAdd"
+										/>
+									</div>
+									<button
+										type="submit"
+										class="btn btn-primary"
+									>
+										Add
+									</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
 
-            
-            <!-- Add Inventory Modal -->
-            <div class="modal fade" id="addInventoryModal" tabindex="-1" aria-labelledby="addInventoryModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addInventoryModalLabel">Add Inventory</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="addInventoryForm">
-                                <div class="mb-3">
-                                    <label for="addBatchID" class="form-label">Batch ID</label>
-                                    <input type="text" class="form-control" id="addBatchID" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="addVaccineName" class="form-label">Vaccine Name</label>
-                                    <select id="addVaccineName" class="form-select" required></select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="addQuantity" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" id="addQuantity" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="addExpiryDate" class="form-label">Expiry Date</label>
-                                    <input type="date" class="form-control" id="addExpiryDate" required>
-                                </div>
-                                <div id="addInventoryError" style="display: none; color: red; margin-top: 10px;"></div>
-                                <button type="submit" class="btn btn-primary">Add</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+				<!-- View Health Worker Modal -->
+				<div
+					class="modal fade"
+					id="viewHealthWorkerModal"
+					tabindex="-1"
+					aria-labelledby="viewHealthWorkerModalLabel"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5
+									class="modal-title"
+									id="viewHealthWorkerModalLabel"
+								>
+									Health Worker Details
+								</h5>
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"
+								></button>
+							</div>
+							<div class="modal-body">
+								<p>
+									<strong>ID:</strong> <span id="hwId"></span>
+								</p>
+								<p>
+									<strong>Name:</strong>
+									<span id="hwName"></span>
+								</p>
+								<p>
+									<strong>Email:</strong>
+									<span id="hwEmail"></span>
+								</p>
+								<p>
+									<strong>Phone:</strong>
+									<span id="hwPhone"></span>
+								</p>
+								<p>
+									<strong>Address:</strong>
+									<span id="hwAddress"></span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-        <!-- Facility Info -->
-<div id="facilityInfo">
-    <h3>Facility Info</h3>
-    <div id="facilityDetails">
-        <!-- Facility details will be dynamically inserted here -->
-    </div>
-    <!-- Edit Button -->
-<button id="editFacilityBtn" class="btn btn-primary">Edit Facility Info</button>
+			<!-- Manage Inventory -->
+			<div id="manageInventory" class="container">
+				<h3>Manage Inventory</h3>
+				<button
+					class="btn btn-primary mb-3"
+					data-bs-toggle="modal"
+					data-bs-target="#addInventoryModal"
+				>
+					Add Inventory
+				</button>
 
-<!-- Modal -->
-<div class="modal fade" id="editFacilityModal" tabindex="-1" aria-labelledby="editFacilityModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editFacilityModalLabel">Edit Facility Info</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editFacilityForm">
-                    <div class="mb-3">
-                        <label for="facilityName" class="form-label">Facility Name</label>
-                        <input type="text" class="form-control" id="facilityName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="facilityLocation" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="facilityLocation" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="facilityPhone" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="facilityPhone" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="facilityEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="facilityEmail" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="facilityType" class="form-label">Facility Type</label>
-                        <select class="form-control" id="facilityType" required>
-                            <option value="Hospital">Hospital</option>
-                            <option value="Clinic">Clinic</option>
-                            <option value="Vaccination Center">Vaccination Center</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="facilityCapacity" class="form-label">Max Storage Capacity</label>
-                        <input type="number" class="form-control" id="facilityCapacity" min="1" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" id="saveFacilityChanges" class="btn btn-primary">Save Changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
+				<table id="inventoryTable" class="table">
+					<thead>
+						<tr>
+							<th>Batch ID</th>
+							<th>Vaccine Name</th>
+							<th>Quantity</th>
+							<th>Expiry Date</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="inventoryTableBody">
+						<!-- Rows will be populated dynamically -->
+					</tbody>
+				</table>
+			</div>
 
+			<!-- Edit Inventory Modal -->
+			<div
+				class="modal fade"
+				id="editInventoryModal"
+				tabindex="-1"
+				aria-labelledby="editInventoryModalLabel"
+			>
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5
+								class="modal-title"
+								id="editInventoryModalLabel"
+							>
+								Edit Inventory
+							</h5>
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body">
+							<form id="editInventoryForm">
+								<!-- Displaying Batch ID -->
+								<div class="mb-3">
+									<label for="editBatchID" class="form-label"
+										>Batch ID</label
+									>
+									<input
+										type="text"
+										class="form-control"
+										id="editBatchID"
+										readonly
+									/>
+								</div>
+								<div class="mb-3">
+									<label
+										for="editVaccineName"
+										class="form-label"
+										>Vaccine Name</label
+									>
+									<select
+										id="editVaccineName"
+										class="form-select"
+										required
+									></select>
+								</div>
+								<div class="mb-3">
+									<label for="editQuantity" class="form-label"
+										>Quantity</label
+									>
+									<input
+										type="number"
+										class="form-control"
+										id="editQuantity"
+										required
+									/>
+								</div>
+								<div class="mb-3">
+									<label
+										for="editExpiryDate"
+										class="form-label"
+										>Expiry Date</label
+									>
+									<input
+										type="date"
+										class="form-control"
+										id="editExpiryDate"
+										required
+									/>
+								</div>
+								<button type="submit" class="btn btn-primary">
+									Update
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 
+			<!-- Add Inventory Modal -->
+			<div
+				class="modal fade"
+				id="addInventoryModal"
+				tabindex="-1"
+				aria-labelledby="addInventoryModalLabel"
+				aria-hidden="true"
+			>
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="addInventoryModalLabel">
+								Add Inventory
+							</h5>
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body">
+							<form id="addInventoryForm">
+								<div class="mb-3">
+									<label for="addBatchID" class="form-label"
+										>Batch ID</label
+									>
+									<input
+										type="text"
+										class="form-control"
+										id="addBatchID"
+										required
+									/>
+								</div>
+								<div class="mb-3">
+									<label
+										for="addVaccineName"
+										class="form-label"
+										>Vaccine Name</label
+									>
+									<select
+										id="addVaccineName"
+										class="form-select"
+										required
+									></select>
+								</div>
+								<div class="mb-3">
+									<label for="addQuantity" class="form-label"
+										>Quantity</label
+									>
+									<input
+										type="number"
+										class="form-control"
+										id="addQuantity"
+										required
+									/>
+								</div>
+								<div class="mb-3">
+									<label
+										for="addExpiryDate"
+										class="form-label"
+										>Expiry Date</label
+									>
+									<input
+										type="date"
+										class="form-control"
+										id="addExpiryDate"
+										required
+									/>
+								</div>
+								<div
+									id="addInventoryError"
+									style="
+										display: none;
+										color: red;
+										margin-top: 10px;
+									"
+								></div>
+								<button type="submit" class="btn btn-primary">
+									Add
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 
+			<!-- Facility Info -->
+			<div id="facilityInfo">
+				<h3>Facility Info</h3>
+				<div id="facilityDetails">
+					<!-- Facility details will be dynamically inserted here -->
+				</div>
+				<!-- Edit Button -->
+				<button id="editFacilityBtn" class="btn btn-primary">
+					Edit Facility Info
+				</button>
 
-        <!-- View All Appointments -->
-        <div id="viewAllAppointments">
-            <h3>All Appointments</h3>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Appointment ID</th>
-                        <th>Patient Name</th>
-                        <th>Health Worker ID</th>
-                        <th>Vaccine Name</th>
-                        <th>Appointment Date</th>
-                        <th>Time Slot</th>
-                        <th>Status</th>
-                        <th>Comments</th>
-                    </tr>
-                </thead>
-                <tbody id="appointmentsTableBody">
-                    <!-- Dynamic rows will be populated here -->
-                </tbody>
-            </table>
-        </div>
+				<!-- Modal -->
+				<div
+					class="modal fade"
+					id="editFacilityModal"
+					tabindex="-1"
+					aria-labelledby="editFacilityModalLabel"
+					aria-hidden="true"
+				>
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5
+									class="modal-title"
+									id="editFacilityModalLabel"
+								>
+									Edit Facility Info
+								</h5>
+								<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									aria-label="Close"
+								></button>
+							</div>
+							<div class="modal-body">
+								<form id="editFacilityForm">
+									<div class="mb-3">
+										<label
+											for="facilityName"
+											class="form-label"
+											>Facility Name</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="facilityName"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="facilityLocation"
+											class="form-label"
+											>Location</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="facilityLocation"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="facilityPhone"
+											class="form-label"
+											>Phone Number</label
+										>
+										<input
+											type="text"
+											class="form-control"
+											id="facilityPhone"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="facilityEmail"
+											class="form-label"
+											>Email</label
+										>
+										<input
+											type="email"
+											class="form-control"
+											id="facilityEmail"
+											required
+										/>
+									</div>
+									<div class="mb-3">
+										<label
+											for="facilityType"
+											class="form-label"
+											>Facility Type</label
+										>
+										<select
+											class="form-control"
+											id="facilityType"
+											required
+										>
+											<option value="Hospital">
+												Hospital
+											</option>
+											<option value="Clinic">
+												Clinic
+											</option>
+											<option value="Vaccination Center">
+												Vaccination Center
+											</option>
+										</select>
+									</div>
+									<div class="mb-3">
+										<label
+											for="facilityCapacity"
+											class="form-label"
+											>Max Storage Capacity</label
+										>
+										<input
+											type="number"
+											class="form-control"
+											id="facilityCapacity"
+											min="1"
+											required
+										/>
+									</div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button
+									type="button"
+									class="btn btn-secondary"
+									data-bs-dismiss="modal"
+								>
+									Close
+								</button>
+								<button
+									type="button"
+									id="saveFacilityChanges"
+									class="btn btn-primary"
+								>
+									Save Changes
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
+			<!-- View All Appointments -->
+			<div id="viewAllAppointments">
+				<h3>All Appointments</h3>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Appointment ID</th>
+							<th>Patient Name</th>
+							<th>Health Worker ID</th>
+							<th>Vaccine Name</th>
+							<th>Appointment Date</th>
+							<th>Time Slot</th>
+							<th>Status</th>
+							<th>Comments</th>
+						</tr>
+					</thead>
+					<tbody id="appointmentsTableBody">
+						<!-- Dynamic rows will be populated here -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- Bootstrap JS -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+		<!-- Script to toggle between sections -->
+		<script>
+			function showManageHealthWorkers() {
+				document.getElementById("manageHealthWorkers").style.display =
+					"block";
+				document.getElementById("manageInventory").style.display =
+					"none";
+				document.getElementById("facilityInfo").style.display = "none";
+				document.getElementById("viewAllAppointments").style.display =
+					"none";
+				document.getElementById("Home").style.display = "none";
+			}
 
-    <!-- Script to toggle between sections -->
-    <script>
-        function showManageHealthWorkers() {
-            document.getElementById('manageHealthWorkers').style.display = 'block';
-            document.getElementById('manageInventory').style.display = 'none';
-            document.getElementById('facilityInfo').style.display = 'none';
-            document.getElementById('viewAllAppointments').style.display = 'none';
-            document.getElementById('Home').style.display = 'none';
-        }
+			function showManageInventory() {
+				document.getElementById("manageHealthWorkers").style.display =
+					"none";
+				document.getElementById("manageInventory").style.display =
+					"block";
+				document.getElementById("facilityInfo").style.display = "none";
+				document.getElementById("viewAllAppointments").style.display =
+					"none";
+				document.getElementById("Home").style.display = "none";
+			}
 
-        function showManageInventory() {
-            document.getElementById('manageHealthWorkers').style.display = 'none';
-            document.getElementById('manageInventory').style.display = 'block';
-            document.getElementById('facilityInfo').style.display = 'none';
-            document.getElementById('viewAllAppointments').style.display = 'none';
-            document.getElementById('Home').style.display = 'none';
-        }
+			function showFacilityInfo() {
+				document.getElementById("manageHealthWorkers").style.display =
+					"none";
+				document.getElementById("manageInventory").style.display =
+					"none";
+				document.getElementById("facilityInfo").style.display = "block";
+				document.getElementById("viewAllAppointments").style.display =
+					"none";
+				document.getElementById("Home").style.display = "none";
+			}
 
-        function showFacilityInfo() {
-            document.getElementById('manageHealthWorkers').style.display = 'none';
-            document.getElementById('manageInventory').style.display = 'none';
-            document.getElementById('facilityInfo').style.display = 'block';
-            document.getElementById('viewAllAppointments').style.display = 'none';
-            document.getElementById('Home').style.display = 'none';
-        }
+			function showViewAllAppointments() {
+				document.getElementById("manageHealthWorkers").style.display =
+					"none";
+				document.getElementById("manageInventory").style.display =
+					"none";
+				document.getElementById("facilityInfo").style.display = "none";
+				document.getElementById("viewAllAppointments").style.display =
+					"block";
+				document.getElementById("Home").style.display = "none";
+			}
 
-        function showViewAllAppointments() {
-            document.getElementById('manageHealthWorkers').style.display = 'none';
-            document.getElementById('manageInventory').style.display = 'none';
-            document.getElementById('facilityInfo').style.display = 'none';
-            document.getElementById('viewAllAppointments').style.display = 'block';
-            document.getElementById('Home').style.display = 'none';
-        }
+			function showHome() {
+				document.getElementById("Home").style.display = "block";
+				document.getElementById("manageHealthWorkers").style.display =
+					"none";
+				document.getElementById("manageInventory").style.display =
+					"none";
+				document.getElementById("facilityInfo").style.display = "none";
+				document.getElementById("viewAllAppointments").style.display =
+					"none";
+			}
 
-        function showHome() {
-            document.getElementById('Home').style.display = 'block';
-            document.getElementById('manageHealthWorkers').style.display = 'none';
-            document.getElementById('manageInventory').style.display = 'none';
-            document.getElementById('facilityInfo').style.display = 'none';
-            document.getElementById('viewAllAppointments').style.display = 'none';
-        }
-        
-        // Fetch the facility manager's ID from local storage
-    let facilityManagerId;
-    facilityManagerId = localStorage.getItem('facility-manager-id');
+			// Fetch the facility manager's ID from local storage
+			let facilityManagerId;
+			facilityManagerId = localStorage.getItem("facility-manager-id");
 
-    // Function to fetch and display the facility manager's name
-    async function fetchFacilityManagerName() {
-        try {
-            // API request to fetch the facility manager details
-            console.log(facilityManagerId)
-            const response = await fetch(`http://localhost:3000/facility-manager/${facilityManagerId}`);
-            const data = await response.json();
+			// Function to fetch and display the facility manager's name
+			async function fetchFacilityManagerName() {
+				try {
+					// API request to fetch the facility manager details
+					console.log(facilityManagerId);
+					const response = await fetch(
+						`http://localhost:3000/facility-manager/${facilityManagerId}`
+					);
+					const data = await response.json();
 
-            // Check if data is retrieved successfully
-            if (response.ok) {
-                // Display the facility manager's name
-                document.getElementById('welcomeMessage').innerText = `Welcome, ${data.first_name}`;
-            } else {
-                console.error('Failed to fetch facility manager details:', data.message);
-            }
-        } catch (error) {
-            console.error('Error fetching facility manager details:', error);
-        }
-    }
+					// Check if data is retrieved successfully
+					if (response.ok) {
+						// Display the facility manager's name
+						document.getElementById(
+							"welcomeMessage"
+						).innerText = `Welcome, ${data.first_name}`;
+					} else {
+						console.error(
+							"Failed to fetch facility manager details:",
+							data.message
+						);
+					}
+				} catch (error) {
+					console.error(
+						"Error fetching facility manager details:",
+						error
+					);
+				}
+			}
 
-    // Fetch and display the facility manager's name on page load
-    document.addEventListener('DOMContentLoaded', fetchFacilityManagerName);
+			// Fetch and display the facility manager's name on page load
+			document.addEventListener(
+				"DOMContentLoaded",
+				fetchFacilityManagerName
+			);
 
-        // Set default view to Manage Health Workers
-        showHome();
+			// Set default view to Manage Health Workers
+			showHome();
 
-    // Assume facilityManagerId is available in the variable `facilityManagerId`
+			// Assume facilityManagerId is available in the variable `facilityManagerId`
 
-// Function to fetch and display appointments
-function fetchAppointments() {
-    // URL for fetching appointments by facility manager ID
-    const apiUrl = `http://localhost:3000/facility-manager/${facilityManagerId}/appointments`;
+			// Function to fetch and display appointments
+			function fetchAppointments() {
+				// URL for fetching appointments by facility manager ID
+				const apiUrl = `http://localhost:3000/facility-manager/${facilityManagerId}/appointments`;
+				//TILL HERE
 
-    // Fetch the data from the API
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            const appointmentsTableBody = document.getElementById("appointmentsTableBody");
-            appointmentsTableBody.innerHTML = ''; // Clear any existing rows
+				// Fetch the data from the API
+				fetch(apiUrl)
+					.then((response) => response.json())
+					.then((data) => {
+						const appointmentsTableBody = document.getElementById(
+							"appointmentsTableBody"
+						);
+						appointmentsTableBody.innerHTML = ""; // Clear any existing rows
 
-            // Check if there are any appointments
-            if (data.length === 0) {
-                appointmentsTableBody.innerHTML = '<tr><td colspan="8">No appointments found.</td></tr>';
-            } else {
-                // Iterate through the appointments and populate the table
-                data.forEach(appointment => {
-                    const row = document.createElement("tr");
+						// Check if there are any appointments
+						if (data.length === 0) {
+							appointmentsTableBody.innerHTML =
+								'<tr><td colspan="8">No appointments found.</td></tr>';
+						} else {
+							// Iterate through the appointments and populate the table
+							data.forEach((appointment) => {
+								const row = document.createElement("tr");
 
-                    // Handle the appointment date correctly: use UTC methods to ensure no time zone shift
-                    const appointmentDate = new Date(appointment.appointment_date);
-                    
-                    // Adjust the date to handle UTC without converting it to local time
-                    const adjustedDate = new Date(Date.UTC(appointmentDate.getUTCFullYear(), 
-                                                            appointmentDate.getUTCMonth(), 
-                                                            appointmentDate.getUTCDate()));
-                    
-                    // Format the date to "YYYY-MM-DD"
-                    const formattedDate = adjustedDate.toISOString().split('T')[0]; 
+								// Handle the appointment date correctly: use UTC methods to ensure no time zone shift
+								const appointmentDate = new Date(
+									appointment.appointment_date
+								);
 
-                    row.innerHTML = `
+								// Adjust the date to handle UTC without converting it to local time
+								const adjustedDate = new Date(
+									Date.UTC(
+										appointmentDate.getUTCFullYear(),
+										appointmentDate.getUTCMonth(),
+										appointmentDate.getUTCDate()
+									)
+								);
+
+								// Format the date to "YYYY-MM-DD"
+								const formattedDate = adjustedDate
+									.toISOString()
+									.split("T")[0];
+
+								row.innerHTML = `
                         <td>${appointment.appointment_id}</td>
                         <td>${appointment.patient_name}</td>
                         <td>${appointment.health_worker_id}</td>
@@ -546,264 +990,339 @@ function fetchAppointments() {
                         <td>${appointment.status}</td>
                         <td>${appointment.comments}</td>
                     `;
-                    appointmentsTableBody.appendChild(row);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching appointments:', error);
-        });
-}
+								appointmentsTableBody.appendChild(row);
+							});
+						}
+					})
+					.catch((error) => {
+						console.error("Error fetching appointments:", error);
+					});
+			}
 
-// Call the function to fetch appointments when the page loads
-window.onload = fetchAppointments;
+			// Call the function to fetch appointments when the page loads
+			window.onload = fetchAppointments;
 
-// Function to fetch health workers for the facility
-async function fetchHealthWorkers() {
-        try {
-            const response = await fetch(`http://localhost:3000/facility-manager/${facilityManagerId}/healthworkers`);
-            if (!response.ok) {
-                console.error("Failed to fetch health workers");
-                return;
-            }
-            const healthWorkers = await response.json();
-            populateHealthWorkersTable(healthWorkers);
-        } catch (error) {
-            console.error("Error fetching health workers:", error);
-        }
-    }
+			// Function to fetch health workers for the facility
+			async function fetchHealthWorkers() {
+				try {
+					const response = await fetch(
+						`http://localhost:3000/facility-manager/${facilityManagerId}/healthworkers`
+					);
+					if (!response.ok) {
+						console.error("Failed to fetch health workers");
+						return;
+					}
+					const healthWorkers = await response.json();
+					populateHealthWorkersTable(healthWorkers);
+				} catch (error) {
+					console.error("Error fetching health workers:", error);
+				}
+			}
 
-    // Function to populate the health workers table
-    function populateHealthWorkersTable(healthWorkers) {
-    const tableBody = document.getElementById('healthWorkersTableBody');
-    tableBody.innerHTML = ''; // Clear existing rows
+			// Function to populate the health workers table
+			function populateHealthWorkersTable(healthWorkers) {
+				const tableBody = document.getElementById(
+					"healthWorkersTableBody"
+				);
+				tableBody.innerHTML = ""; // Clear existing rows
 
-    healthWorkers.forEach(hw => {
-        const row = document.createElement('tr');
-        row.setAttribute('data-id', hw.health_worker_id); // Add data-id to the row
+				healthWorkers.forEach((hw) => {
+					const row = document.createElement("tr");
+					row.setAttribute("data-id", hw.health_worker_id); // Add data-id to the row
 
-        // Health Worker ID
-        const idCell = document.createElement('td');
-        idCell.textContent = hw.health_worker_id;
-        row.appendChild(idCell);
+					// Health Worker ID
+					const idCell = document.createElement("td");
+					idCell.textContent = hw.health_worker_id;
+					row.appendChild(idCell);
 
-        // Health Worker Name
-        const nameCell = document.createElement('td');
-        nameCell.textContent = `${hw.first_name} ${hw.last_name}`;
-        row.appendChild(nameCell);
+					// Health Worker Name
+					const nameCell = document.createElement("td");
+					nameCell.textContent = `${hw.first_name} ${hw.last_name}`;
+					row.appendChild(nameCell);
 
-        // Actions
-        const actionsCell = document.createElement('td');
+					// Actions
+					const actionsCell = document.createElement("td");
 
-        // View Icon
-        const viewIcon = document.createElement('i');
-        viewIcon.className = 'fas fa-eye action-icon';
-        viewIcon.title = 'View';
-        viewIcon.onclick = () => viewHealthWorker(hw.health_worker_id);
-        actionsCell.appendChild(viewIcon);
+					// View Icon
+					const viewIcon = document.createElement("i");
+					viewIcon.className = "fas fa-eye action-icon";
+					viewIcon.title = "View";
+					viewIcon.onclick = () =>
+						viewHealthWorker(hw.health_worker_id);
+					actionsCell.appendChild(viewIcon);
 
-        // Edit Icon
-        const editIcon = document.createElement('i');
-        editIcon.className = 'fas fa-edit action-icon';
-        editIcon.title = 'Edit';
-        editIcon.onclick = () => editHealthWorker(hw.health_worker_id);
-        actionsCell.appendChild(editIcon);
+					// Edit Icon
+					const editIcon = document.createElement("i");
+					editIcon.className = "fas fa-edit action-icon";
+					editIcon.title = "Edit";
+					editIcon.onclick = () =>
+						editHealthWorker(hw.health_worker_id);
+					actionsCell.appendChild(editIcon);
 
-        // Delete Icon
-        const deleteIcon = document.createElement('i');
-        deleteIcon.className = 'fas fa-trash action-icon';
-        deleteIcon.title = 'Delete';
-        deleteIcon.onclick = () => deleteHealthWorker(hw.health_worker_id);
-        actionsCell.appendChild(deleteIcon);
+					// Delete Icon
+					const deleteIcon = document.createElement("i");
+					deleteIcon.className = "fas fa-trash action-icon";
+					deleteIcon.title = "Delete";
+					deleteIcon.onclick = () =>
+						deleteHealthWorker(hw.health_worker_id);
+					actionsCell.appendChild(deleteIcon);
 
-        // Append actions cell to row
-        row.appendChild(actionsCell);
+					// Append actions cell to row
+					row.appendChild(actionsCell);
 
-        // Add row to table body
-        tableBody.appendChild(row);
-    });
-}
+					// Add row to table body
+					tableBody.appendChild(row);
+				});
+			}
 
+			// Function to view health worker details
+			// Use Bootstrap 5's modal functionality (no jQuery needed)
+			function viewHealthWorker(healthWorkerId) {
+				// Show the modal using Bootstrap 5
+				const modal = new bootstrap.Modal(
+					document.getElementById("viewHealthWorkerModal")
+				);
+				modal.show();
 
+				// Fetch health worker details from the API
+				fetch(`http://localhost:3000/health-worker2/${healthWorkerId}`)
+					.then((response) => response.json())
+					.then((data) => {
+						console.log(data);
+						// Populate the modal with the health worker details
+						document.getElementById("hwId").textContent =
+							data.health_worker_id;
+						document.getElementById(
+							"hwName"
+						).textContent = `${data.first_name} ${data.last_name}`;
+						document.getElementById("hwEmail").textContent =
+							data.email;
+						document.getElementById("hwPhone").textContent =
+							data.phone_number;
+						document.getElementById("hwAddress").textContent =
+							data.address;
+					})
+					.catch((error) => {
+						console.error(
+							"Error fetching health worker details:",
+							error
+						);
+					});
+			}
 
+			function deleteHealthWorker(healthWorkerId) {
+				const confirmation = confirm(
+					`Are you sure you want to delete Health Worker: ${healthWorkerId}?`
+				);
+				if (confirmation) {
+					// Send DELETE request to the API to delete the health worker
+					fetch(
+						`http://localhost:3000/health-worker2/${healthWorkerId}`,
+						{
+							method: "DELETE",
+						}
+					)
+						.then((response) => {
+							if (response.ok) {
+								alert(
+									`Health Worker: ${healthWorkerId} has been deleted.`
+								);
+								// Remove the health worker row from the table
+								const row = document.querySelector(
+									`#healthWorkersTableBody tr[data-id='${healthWorkerId}']`
+								);
+								if (row) {
+									row.remove();
+								}
+							} else {
+								alert(
+									`Failed to delete Health Worker: ${healthWorkerId}`
+								);
+							}
+						})
+						.catch((error) => {
+							console.error(
+								"Error deleting health worker:",
+								error
+							);
+							alert(
+								"An error occurred while deleting the health worker."
+							);
+						});
+				}
+			}
 
+			// Fetch health workers on page load
+			document.addEventListener("DOMContentLoaded", fetchHealthWorkers);
+			// Function to edit health worker details
+			// Function to fetch and show health worker details in the modal
+			function editHealthWorker(healthWorkerId) {
+				// Show the modal using Bootstrap 5
+				const modal = new bootstrap.Modal(
+					document.getElementById("editHealthWorkerModal")
+				);
+				modal.show();
 
-    // Function to view health worker details
-// Use Bootstrap 5's modal functionality (no jQuery needed)
-function viewHealthWorker(healthWorkerId) {
-    // Show the modal using Bootstrap 5
-    const modal = new bootstrap.Modal(document.getElementById('viewHealthWorkerModal'));
-    modal.show();
+				// Fetch health worker details from the API
+				fetch(`http://localhost:3000/health-worker2/${healthWorkerId}`)
+					.then((response) => response.json())
+					.then((data) => {
+						// Populate the modal with the health worker details
+						document.getElementById("editHealthWorkerId").value =
+							data.health_worker_id;
+						document.getElementById("editFirstName").value =
+							data.first_name;
+						document.getElementById("editLastName").value =
+							data.last_name;
+						document.getElementById("editEmail").value = data.email;
+						document.getElementById("editPhone").value =
+							data.phone_number;
+						document.getElementById("editAddress").value =
+							data.address || "";
+						document.getElementById("editFacilityId").value =
+							data.facility_id || "";
+					})
+					.catch((error) => {
+						console.error(
+							"Error fetching health worker details:",
+							error
+						);
+					});
+			}
 
-    // Fetch health worker details from the API
-    fetch(`http://localhost:3000/health-worker2/${healthWorkerId}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            // Populate the modal with the health worker details
-            document.getElementById('hwId').textContent = data.health_worker_id;
-            document.getElementById('hwName').textContent = `${data.first_name} ${data.last_name}`;
-            document.getElementById('hwEmail').textContent = data.email;
-            document.getElementById('hwPhone').textContent = data.phone_number;
-            document.getElementById('hwAddress').textContent = data.address;
-        })
-        .catch(error => {
-            console.error('Error fetching health worker details:', error);
-        });
-}
+			// Function to handle form submission and update the health worker details
+			document
+				.getElementById("editHealthWorkerForm")
+				.addEventListener("submit", function (event) {
+					event.preventDefault(); // Prevent form from submitting normally
 
-    function deleteHealthWorker(healthWorkerId) {
-    const confirmation = confirm(`Are you sure you want to delete Health Worker: ${healthWorkerId}?`);
-    if (confirmation) {
-        // Send DELETE request to the API to delete the health worker
-        fetch(`http://localhost:3000/health-worker2/${healthWorkerId}`, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (response.ok) {
-                alert(`Health Worker: ${healthWorkerId} has been deleted.`);
-                // Remove the health worker row from the table
-                const row = document.querySelector(`#healthWorkersTableBody tr[data-id='${healthWorkerId}']`);
-                if (row) {
-                    row.remove();
-                }
-            } else {
-                alert(`Failed to delete Health Worker: ${healthWorkerId}`);
-            }
-        })
-        .catch(error => {
-            console.error('Error deleting health worker:', error);
-            alert('An error occurred while deleting the health worker.');
-        });
-    }
-}
+					// Get the updated details from the form
+					const healthWorkerId =
+						document.getElementById("editHealthWorkerId").value;
+					const firstName =
+						document.getElementById("editFirstName").value;
+					const lastName =
+						document.getElementById("editLastName").value;
+					const email = document.getElementById("editEmail").value;
+					const phone = document.getElementById("editPhone").value;
+					const address =
+						document.getElementById("editAddress").value;
+					const facilityId =
+						document.getElementById("editFacilityId").value;
 
+					// Prepare the updated data
+					const updatedData = {
+						first_name: firstName,
+						last_name: lastName,
+						email: email,
+						phone_number: phone,
+						address: address,
+						facility_id: facilityId,
+					};
 
-    // Fetch health workers on page load
-    document.addEventListener('DOMContentLoaded', fetchHealthWorkers);
-    // Function to edit health worker details
-// Function to fetch and show health worker details in the modal
-function editHealthWorker(healthWorkerId) {
-    // Show the modal using Bootstrap 5
-    const modal = new bootstrap.Modal(document.getElementById('editHealthWorkerModal'));
-    modal.show();
+					fetch(
+						`http://localhost:3000/health-worker2/${healthWorkerId}`,
+						{
+							method: "PUT",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify(updatedData),
+						}
+					)
+						.then((response) => {
+							if (!response.ok) {
+								// If the response is not ok, throw an error
+								throw new Error(
+									"Failed to update health worker details"
+								);
+							}
+							return response.json(); // Only parse JSON if the response is ok
+						})
+						.then((data) => {
+							console.log(data);
+							alert("Health Worker details updated successfully");
+							// Close the modal
+							const modal = bootstrap.Modal.getInstance(
+								document.getElementById("editHealthWorkerModal")
+							);
+							modal.hide();
+							// Optionally, you can re-fetch the health workers list to reflect the changes
+							fetchHealthWorkers();
+						})
+						.catch((error) => {
+							console.error(
+								"Error updating health worker details:",
+								error
+							);
+							alert(error.message); // Show the error message to the user
+						});
+				});
 
-    // Fetch health worker details from the API
-    fetch(`http://localhost:3000/health-worker2/${healthWorkerId}`)
-        .then(response => response.json())
-        .then(data => {
-            // Populate the modal with the health worker details
-            document.getElementById('editHealthWorkerId').value = data.health_worker_id;
-            document.getElementById('editFirstName').value = data.first_name;
-            document.getElementById('editLastName').value = data.last_name;
-            document.getElementById('editEmail').value = data.email;
-            document.getElementById('editPhone').value = data.phone_number;
-            document.getElementById('editAddress').value = data.address || '';
-            document.getElementById('editFacilityId').value = data.facility_id || '';
-        })
-        .catch(error => {
-            console.error('Error fetching health worker details:', error);
-        });
-}
+			document
+				.getElementById("addHealthWorkerForm")
+				.addEventListener("submit", async (e) => {
+					console.log("yes");
+					e.preventDefault();
+					const healthWorkerData = {
+						health_worker_id:
+							document.getElementById("hwIdAdd").value, // Capture Health Worker ID
+						first_name:
+							document.getElementById("hwFirstNameAdd").value,
+						last_name:
+							document.getElementById("hwLastNameAdd").value,
+						email: document.getElementById("hwEmailAdd").value,
+						phone_number:
+							document.getElementById("hwPhoneAdd").value,
+						address: document.getElementById("hwAddressAdd").value,
+						facility_manager_id: facilityManagerId, // Use the manager's ID to fetch facility_id
+					};
+					console.log(healthWorkerData);
+					try {
+						const response = await fetch(
+							"http://localhost:3000/add-health-worker",
+							{
+								method: "POST",
+								headers: {
+									"Content-Type": "application/json",
+								},
+								body: JSON.stringify(healthWorkerData),
+							}
+						);
 
-// Function to handle form submission and update the health worker details
-document.getElementById('editHealthWorkerForm').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent form from submitting normally
+						if (response.ok) {
+							alert("Health Worker added successfully!");
+							document
+								.getElementById("addHealthWorkerForm")
+								.reset();
+							bootstrap.Modal.getInstance(
+								document.getElementById("addHealthWorkerModal")
+							).hide();
+							fetchHealthWorkers(); // Refresh the table
+						} else {
+							const data = await response.json();
+							alert("Error: " + data.message);
+						}
+					} catch (error) {
+						console.error("Error adding health worker:", error);
+						alert(
+							"An error occurred while adding the health worker."
+						);
+					}
+				});
 
-    // Get the updated details from the form
-    const healthWorkerId = document.getElementById('editHealthWorkerId').value;
-    const firstName = document.getElementById('editFirstName').value;
-    const lastName = document.getElementById('editLastName').value;
-    const email = document.getElementById('editEmail').value;
-    const phone = document.getElementById('editPhone').value;
-    const address = document.getElementById('editAddress').value;
-    const facilityId = document.getElementById('editFacilityId').value;
+			async function fetchFacilityInfo() {
+				try {
+					const response = await fetch(
+						`http://localhost:3000/facility-info?facilityManagerId=${facilityManagerId}`
+					);
+					if (response.ok) {
+						const data = await response.json();
 
-    // Prepare the updated data
-    const updatedData = {
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        phone_number: phone,
-        address: address,
-        facility_id: facilityId,
-    };
-
-    fetch(`http://localhost:3000/health-worker2/${healthWorkerId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedData),
-    })
-    .then(response => {
-        if (!response.ok) {
-            // If the response is not ok, throw an error
-            throw new Error('Failed to update health worker details');
-        }
-        return response.json();  // Only parse JSON if the response is ok
-    })
-    .then(data => {
-        console.log(data);
-        alert('Health Worker details updated successfully');
-        // Close the modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('editHealthWorkerModal'));
-        modal.hide();
-        // Optionally, you can re-fetch the health workers list to reflect the changes
-        fetchHealthWorkers();
-    })
-    .catch(error => {
-        console.error('Error updating health worker details:', error);
-        alert(error.message);  // Show the error message to the user
-    });
-});
-
-document.getElementById('addHealthWorkerForm').addEventListener('submit', async (e) => {
-    console.log("yes")
-    e.preventDefault();
-    const healthWorkerData = {
-        health_worker_id: document.getElementById('hwIdAdd').value, // Capture Health Worker ID
-        first_name: document.getElementById('hwFirstNameAdd').value,
-        last_name: document.getElementById('hwLastNameAdd').value,
-        email: document.getElementById('hwEmailAdd').value,
-        phone_number: document.getElementById('hwPhoneAdd').value,
-        address: document.getElementById('hwAddressAdd').value,
-        facility_manager_id: facilityManagerId, // Use the manager's ID to fetch facility_id
-    };
-    console.log(healthWorkerData)
-    try {
-        const response = await fetch('http://localhost:3000/add-health-worker', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(healthWorkerData),
-        });
-
-        if (response.ok) {
-            alert('Health Worker added successfully!');
-            document.getElementById('addHealthWorkerForm').reset();
-            bootstrap.Modal.getInstance(document.getElementById('addHealthWorkerModal')).hide();
-            fetchHealthWorkers(); // Refresh the table
-        } else {
-            const data = await response.json();
-            alert('Error: ' + data.message);
-        }
-    } catch (error) {
-        console.error('Error adding health worker:', error);
-        alert('An error occurred while adding the health worker.');
-    }
-});
-
-async function fetchFacilityInfo() {
-    try {
-        const response = await fetch(`http://localhost:3000/facility-info?facilityManagerId=${facilityManagerId}`);
-        if (response.ok) {
-            const data = await response.json();
-
-            // Display facility details
-            const facilityDetailsDiv = document.getElementById('facilityDetails');
-            facilityDetailsDiv.innerHTML = `
+						// Display facility details
+						const facilityDetailsDiv =
+							document.getElementById("facilityDetails");
+						facilityDetailsDiv.innerHTML = `
                 <p><strong>Facility Name:</strong> ${data.facility_name}</p>
                 <p><strong>Location:</strong> ${data.location}</p>
                 <p><strong>Phone Number:</strong> ${data.phone_number}</p>
@@ -812,113 +1331,160 @@ async function fetchFacilityInfo() {
                 <p><strong>Max Storage Capacity:</strong> ${data.max_storage_capacity}</p>
             `;
 
-            // Add facility details as data attributes for easy access
-            facilityDetailsDiv.dataset.facility_name = data.facility_name;
-            facilityDetailsDiv.dataset.location = data.location;
-            facilityDetailsDiv.dataset.phone_number = data.phone_number;
-            facilityDetailsDiv.dataset.email = data.email;
-            facilityDetailsDiv.dataset.facility_type = data.facility_type;
-            facilityDetailsDiv.dataset.max_storage_capacity = data.max_storage_capacity;
-        } else {
-            const errorData = await response.json();
-            alert('Error fetching facility info: ' + errorData.message);
-        }
-    } catch (error) {
-        console.error('Error fetching facility info:', error);
-        alert('An error occurred while fetching the facility info.');
-    }
-}
+						// Add facility details as data attributes for easy access
+						facilityDetailsDiv.dataset.facility_name =
+							data.facility_name;
+						facilityDetailsDiv.dataset.location = data.location;
+						facilityDetailsDiv.dataset.phone_number =
+							data.phone_number;
+						facilityDetailsDiv.dataset.email = data.email;
+						facilityDetailsDiv.dataset.facility_type =
+							data.facility_type;
+						facilityDetailsDiv.dataset.max_storage_capacity =
+							data.max_storage_capacity;
+					} else {
+						const errorData = await response.json();
+						alert(
+							"Error fetching facility info: " + errorData.message
+						);
+					}
+				} catch (error) {
+					console.error("Error fetching facility info:", error);
+					alert(
+						"An error occurred while fetching the facility info."
+					);
+				}
+			}
 
-// Call fetchFacilityInfo on page load
-document.addEventListener('DOMContentLoaded', fetchFacilityInfo);
+			// Call fetchFacilityInfo on page load
+			document.addEventListener("DOMContentLoaded", fetchFacilityInfo);
 
+			// Populate the edit form with current facility details
+			document
+				.getElementById("editFacilityBtn")
+				.addEventListener("click", () => {
+					const facilityDetailsDiv =
+						document.getElementById("facilityDetails");
 
-// Populate the edit form with current facility details
-document.getElementById('editFacilityBtn').addEventListener('click', () => {
-    const facilityDetailsDiv = document.getElementById('facilityDetails');
+					// Extract data from the data attributes
+					const facilityName =
+						facilityDetailsDiv.dataset.facility_name;
+					const location = facilityDetailsDiv.dataset.location;
+					const phoneNumber = facilityDetailsDiv.dataset.phone_number;
+					const email = facilityDetailsDiv.dataset.email;
+					const facilityType =
+						facilityDetailsDiv.dataset.facility_type;
+					const maxStorageCapacity =
+						facilityDetailsDiv.dataset.max_storage_capacity;
 
-    // Extract data from the data attributes
-    const facilityName = facilityDetailsDiv.dataset.facility_name;
-    const location = facilityDetailsDiv.dataset.location;
-    const phoneNumber = facilityDetailsDiv.dataset.phone_number;
-    const email = facilityDetailsDiv.dataset.email;
-    const facilityType = facilityDetailsDiv.dataset.facility_type;
-    const maxStorageCapacity = facilityDetailsDiv.dataset.max_storage_capacity;
+					// Populate the modal fields
+					document.getElementById("facilityName").value =
+						facilityName || "";
+					document.getElementById("facilityLocation").value =
+						location || "";
+					document.getElementById("facilityPhone").value =
+						phoneNumber || "";
+					document.getElementById("facilityEmail").value =
+						email || "";
+					document.getElementById("facilityType").value =
+						facilityType || "Hospital"; // Default to "Hospital"
+					document.getElementById("facilityCapacity").value =
+						maxStorageCapacity || "";
 
-    // Populate the modal fields
-    document.getElementById('facilityName').value = facilityName || '';
-    document.getElementById('facilityLocation').value = location || '';
-    document.getElementById('facilityPhone').value = phoneNumber || '';
-    document.getElementById('facilityEmail').value = email || '';
-    document.getElementById('facilityType').value = facilityType || 'Hospital'; // Default to "Hospital"
-    document.getElementById('facilityCapacity').value = maxStorageCapacity || '';
+					// Show the modal
+					const editFacilityModal = new bootstrap.Modal(
+						document.getElementById("editFacilityModal")
+					);
+					editFacilityModal.show();
+				});
 
-    // Show the modal
-    const editFacilityModal = new bootstrap.Modal(document.getElementById('editFacilityModal'));
-    editFacilityModal.show();
-});
+			// Save the updated facility info
+			document
+				.getElementById("saveFacilityChanges")
+				.addEventListener("click", async () => {
+					const updatedData = {
+						facility_name:
+							document.getElementById("facilityName").value,
+						location:
+							document.getElementById("facilityLocation").value,
+						phone_number:
+							document.getElementById("facilityPhone").value,
+						email: document.getElementById("facilityEmail").value,
+						facility_type:
+							document.getElementById("facilityType").value,
+						max_storage_capacity: parseInt(
+							document.getElementById("facilityCapacity").value,
+							10
+						),
+					};
 
+					try {
+						const response = await fetch(
+							`http://localhost:3000/update-facility?facilityManagerId=${facilityManagerId}`,
+							{
+								method: "PUT",
+								headers: {
+									"Content-Type": "application/json",
+								},
+								body: JSON.stringify(updatedData),
+							}
+						);
 
-// Save the updated facility info
-document.getElementById('saveFacilityChanges').addEventListener('click', async () => {
-    const updatedData = {
-        facility_name: document.getElementById('facilityName').value,
-        location: document.getElementById('facilityLocation').value,
-        phone_number: document.getElementById('facilityPhone').value,
-        email: document.getElementById('facilityEmail').value,
-        facility_type: document.getElementById('facilityType').value,
-        max_storage_capacity: parseInt(document.getElementById('facilityCapacity').value, 10),
-    };
+						if (response.ok) {
+							alert("Facility info updated successfully!");
+							const editFacilityModal =
+								bootstrap.Modal.getInstance(
+									document.getElementById("editFacilityModal")
+								);
+							editFacilityModal.hide();
+							fetchFacilityInfo(); // Refresh the facility details
+						} else {
+							const errorData = await response.json();
+							alert(
+								"Error updating facility info: " +
+									errorData.message
+							);
+						}
+					} catch (error) {
+						console.error("Error updating facility info:", error);
+						alert(
+							"An error occurred while updating the facility info."
+						);
+					}
+				});
 
-    try {
-        const response = await fetch(`http://localhost:3000/update-facility?facilityManagerId=${facilityManagerId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedData),
-        });
+			// Fetch inventory and populate the table
+			async function fetchInventory() {
+				const response = await fetch(
+					`http://localhost:3000/inventory?facilityManagerId=${facilityManagerId}`
+				);
+				const inventory = await response.json();
+				populateInventoryTable(inventory);
+			}
 
-        if (response.ok) {
-            alert('Facility info updated successfully!');
-            const editFacilityModal = bootstrap.Modal.getInstance(document.getElementById('editFacilityModal'));
-            editFacilityModal.hide();
-            fetchFacilityInfo(); // Refresh the facility details
-        } else {
-            const errorData = await response.json();
-            alert('Error updating facility info: ' + errorData.message);
-        }
-    } catch (error) {
-        console.error('Error updating facility info:', error);
-        alert('An error occurred while updating the facility info.');
-    }
-});
+			function populateInventoryTable(inventory) {
+				const tableBody = document.getElementById("inventoryTableBody");
+				tableBody.innerHTML = ""; // Clear any existing rows
 
-// Fetch inventory and populate the table
-async function fetchInventory() {
-    const response = await fetch(`http://localhost:3000/inventory?facilityManagerId=${facilityManagerId}`);
-    const inventory = await response.json();
-    populateInventoryTable(inventory);
-}
+				inventory.forEach((item) => {
+					// Create a Date object from the expiry_date
+					const expiryDate = new Date(item.expiry_date);
 
-function populateInventoryTable(inventory) {
-    const tableBody = document.getElementById('inventoryTableBody');
-    tableBody.innerHTML = '';  // Clear any existing rows
+					// Adjust for the time zone offset to ensure the date doesn't shift
+					// Set to the local time zone and use UTC methods to get a correct date representation
+					const adjustedDate = new Date(
+						expiryDate.getTime() -
+							expiryDate.getTimezoneOffset() * 60000
+					);
 
-    inventory.forEach(item => {
-        // Create a Date object from the expiry_date
-        const expiryDate = new Date(item.expiry_date);
-        
-        // Adjust for the time zone offset to ensure the date doesn't shift
-        // Set to the local time zone and use UTC methods to get a correct date representation
-        const adjustedDate = new Date(expiryDate.getTime() - (expiryDate.getTimezoneOffset() * 60000));
+					// Format the adjusted date to YYYY-MM-DD (stripping the time component)
+					const formattedDate = adjustedDate
+						.toISOString()
+						.split("T")[0];
 
-        // Format the adjusted date to YYYY-MM-DD (stripping the time component)
-        const formattedDate = adjustedDate.toISOString().split('T')[0];
-
-        // Create a new row in the table
-        const row = document.createElement('tr');
-        row.innerHTML = `
+					// Create a new row in the table
+					const row = document.createElement("tr");
+					row.innerHTML = `
             <td>${item.batch_number}</td>
             <td>${item.vaccine_name}</td>
             <td>${item.stock_quantity}</td>
@@ -927,156 +1493,197 @@ function populateInventoryTable(inventory) {
                 <i class="fas fa-edit mx-2" onclick="editInventory('${item.batch_number}')"></i>
                 <i class="fas fa-trash" onclick="deleteInventory('${item.batch_number}')"></i>
             </td>`;
-        tableBody.appendChild(row);
-    });
-}
+					tableBody.appendChild(row);
+				});
+			}
 
+			// Populate vaccine options
+			async function fetchVaccines(selectElementId) {
+				const response = await fetch("http://localhost:3000/vaccines");
+				const vaccines = await response.json();
+				const selectElement = document.getElementById(selectElementId);
+				selectElement.innerHTML = vaccines
+					.map(
+						(v) =>
+							`<option value="${v.vaccine_id}">${v.vaccine_name}</option>`
+					)
+					.join("");
+			}
 
+			document
+				.querySelector("#addInventoryForm")
+				.addEventListener("submit", async (e) => {
+					e.preventDefault();
 
-// Populate vaccine options
-async function fetchVaccines(selectElementId) {
-    const response = await fetch('http://localhost:3000/vaccines');
-    const vaccines = await response.json();
-    const selectElement = document.getElementById(selectElementId);
-    selectElement.innerHTML = vaccines.map(v => `<option value="${v.vaccine_id}">${v.vaccine_name}</option>`).join('');
-}
+					// Clear previous messages
+					const errorDiv =
+						document.getElementById("addInventoryError");
+					errorDiv.textContent = "";
+					errorDiv.style.display = "none";
 
-document.querySelector('#addInventoryForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+					const data = {
+						batch_number:
+							document.getElementById("addBatchID").value,
+						vaccine_id:
+							document.getElementById("addVaccineName").value,
+						stock_quantity:
+							document.getElementById("addQuantity").value,
+						expiry_date:
+							document.getElementById("addExpiryDate").value,
+						facilityManagerId,
+					};
 
-    // Clear previous messages
-    const errorDiv = document.getElementById('addInventoryError');
-    errorDiv.textContent = '';
-    errorDiv.style.display = 'none';
+					try {
+						const response = await fetch(
+							"http://localhost:3000/inventory",
+							{
+								method: "POST",
+								headers: { "Content-Type": "application/json" },
+								body: JSON.stringify(data),
+							}
+						);
 
-    const data = {
-        batch_number: document.getElementById('addBatchID').value,
-        vaccine_id: document.getElementById('addVaccineName').value,
-        stock_quantity: document.getElementById('addQuantity').value,
-        expiry_date: document.getElementById('addExpiryDate').value,
-        facilityManagerId,
-    };
+						if (response.ok) {
+							errorDiv.style.display = "none"; // Hide error if previously shown
+							document.getElementById("addInventoryForm").reset();
+							fetchInventory(); // Refresh inventory display
+							new bootstrap.Modal("#addInventoryModal").hide();
+						} else {
+							const error = await response.json();
+							errorDiv.textContent = `Error: ${
+								error.error || "Failed to add inventory."
+							}`;
+							errorDiv.style.color = "red";
+							errorDiv.style.display = "block"; // Show error message
+						}
+					} catch (err) {
+						console.error("Error adding inventory:", err);
+						errorDiv.textContent =
+							"An unexpected error occurred. Please try again.";
+						errorDiv.style.color = "red";
+						errorDiv.style.display = "block"; // Show error message
+					}
+				});
 
-    try {
-        const response = await fetch('http://localhost:3000/inventory', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
+			// Fetch inventory details and prefill edit form
+			async function editInventory(batchID) {
+				try {
+					const response = await fetch(
+						`http://localhost:3000/inventoryFM/${batchID}`
+					);
+					if (!response.ok)
+						throw new Error("Failed to fetch inventory details");
 
-        if (response.ok) {
-            errorDiv.style.display = 'none'; // Hide error if previously shown
-            document.getElementById('addInventoryForm').reset();
-            fetchInventory(); // Refresh inventory display
-            new bootstrap.Modal('#addInventoryModal').hide();
-        } else {
-            const error = await response.json();
-            errorDiv.textContent = `Error: ${error.error || 'Failed to add inventory.'}`;
-            errorDiv.style.color = 'red';
-            errorDiv.style.display = 'block'; // Show error message
-        }
-    } catch (err) {
-        console.error('Error adding inventory:', err);
-        errorDiv.textContent = 'An unexpected error occurred. Please try again.';
-        errorDiv.style.color = 'red';
-        errorDiv.style.display = 'block'; // Show error message
-    }
-});
+					const item = await response.json();
 
+					document.getElementById("editBatchID").value =
+						item.batch_number;
+					document.getElementById("editVaccineName").value =
+						item.vaccine_id;
+					document.getElementById("editQuantity").value =
+						item.stock_quantity;
 
+					// Format date to YYYY-MM-DD for prefill
+					const expiryDate = new Date(item.expiry_date)
+						.toISOString()
+						.split("T")[0];
+					document.getElementById("editExpiryDate").value =
+						expiryDate;
 
-// Fetch inventory details and prefill edit form
-async function editInventory(batchID) {
-    try {
-        const response = await fetch(`http://localhost:3000/inventoryFM/${batchID}`);
-        if (!response.ok) throw new Error('Failed to fetch inventory details');
+					new bootstrap.Modal("#editInventoryModal").show();
+				} catch (error) {
+					console.error("Error fetching inventory:", error);
+					alert("Failed to fetch inventory details");
+				}
+			}
 
-        const item = await response.json();
+			// Handle inventory update form submission
+			// Update inventory submission (no timezone adjustments):
+			document
+				.querySelector("#editInventoryForm")
+				.addEventListener("submit", async (e) => {
+					e.preventDefault();
+					const batchID =
+						document.getElementById("editBatchID").value;
 
-        document.getElementById('editBatchID').value = item.batch_number;
-        document.getElementById('editVaccineName').value = item.vaccine_id;
-        document.getElementById('editQuantity').value = item.stock_quantity;
+					// Collect updated data
+					const updatedData = {
+						vaccine_id:
+							document.getElementById("editVaccineName").value,
+						stock_quantity:
+							document.getElementById("editQuantity").value,
+						expiry_date:
+							document.getElementById("editExpiryDate").value, // Already YYYY-MM-DD
+					};
 
-        // Format date to YYYY-MM-DD for prefill
-        const expiryDate = new Date(item.expiry_date).toISOString().split('T')[0];
-        document.getElementById('editExpiryDate').value = expiryDate;
+					const response = await fetch(
+						`http://localhost:3000/inventory/${batchID}`,
+						{
+							method: "PUT",
+							headers: { "Content-Type": "application/json" },
+							body: JSON.stringify(updatedData),
+						}
+					);
 
-        new bootstrap.Modal('#editInventoryModal').show();
-    } catch (error) {
-        console.error('Error fetching inventory:', error);
-        alert('Failed to fetch inventory details');
-    }
-}
+					if (response.ok) {
+						alert("Inventory updated successfully");
+						new bootstrap.Modal("#editInventoryModal").hide();
+						fetchInventory();
+					} else {
+						alert("Failed to update inventory");
+					}
+				});
 
+			// Delete inventory
+			async function deleteInventory(batchID) {
+				if (
+					confirm("Are you sure you want to delete this inventory?")
+				) {
+					const response = await fetch(
+						`http://localhost:3000/inventory/${batchID}`,
+						{ method: "DELETE" }
+					);
+					if (response.ok) {
+						alert("Inventory deleted successfully");
+						fetchInventory();
+					} else {
+						alert("Failed to delete inventory");
+					}
+				}
+			}
 
-// Handle inventory update form submission
-// Update inventory submission (no timezone adjustments):
-document.querySelector('#editInventoryForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const batchID = document.getElementById('editBatchID').value;
+			fetchInventory();
+			fetchVaccines("addVaccineName");
+			fetchVaccines("editVaccineName");
 
-    // Collect updated data
-    const updatedData = {
-        vaccine_id: document.getElementById('editVaccineName').value,
-        stock_quantity: document.getElementById('editQuantity').value,
-        expiry_date: document.getElementById('editExpiryDate').value, // Already YYYY-MM-DD
-    };
+			// Function to fetch and display today's appointments
+			function fetchTodaysAppointments() {
+				const apiUrl = `http://localhost:3000/facility-manager/${facilityManagerId}/appointments`;
 
-    const response = await fetch(`http://localhost:3000/inventory/${batchID}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData),
-    });
+				fetch(apiUrl)
+					.then((response) => response.json())
+					.then((data) => {
+						const todaysAppointmentsTableBody =
+							document.getElementById(
+								"todaysAppointmentsTableBody"
+							);
+						todaysAppointmentsTableBody.innerHTML = ""; // Clear any existing rows
 
-    if (response.ok) {
-        alert('Inventory updated successfully');
-        new bootstrap.Modal('#editInventoryModal').hide();
-        fetchInventory();
-    } else {
-        alert('Failed to update inventory');
-    }
-});
+						const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+						const todaysAppointments = data.filter(
+							(appointment) =>
+								new Date(appointment.appointment_date)
+									.toISOString()
+									.split("T")[0] === today
+						);
 
-
-
-// Delete inventory
-async function deleteInventory(batchID) {
-    if (confirm('Are you sure you want to delete this inventory?')) {
-        const response = await fetch(`http://localhost:3000/inventory/${batchID}`, { method: 'DELETE' });
-        if (response.ok) {
-            alert('Inventory deleted successfully');
-            fetchInventory();
-        } else {
-            alert('Failed to delete inventory');
-        }
-    }
-}
-
-fetchInventory();
-fetchVaccines('addVaccineName');
-fetchVaccines('editVaccineName');
-
-// Function to fetch and display today's appointments
-function fetchTodaysAppointments() {
-    const apiUrl = `http://localhost:3000/facility-manager/${facilityManagerId}/appointments`;
-
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            const todaysAppointmentsTableBody = document.getElementById("todaysAppointmentsTableBody");
-            todaysAppointmentsTableBody.innerHTML = ''; // Clear any existing rows
-
-            const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-            const todaysAppointments = data.filter(appointment => 
-                new Date(appointment.appointment_date).toISOString().split('T')[0] === today
-            );
-
-            if (todaysAppointments.length === 0) {
-                todaysAppointmentsTableBody.innerHTML = '<tr><td colspan="6">No appointments for today.</td></tr>';
-            } else {
-                todaysAppointments.forEach(appointment => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
+						if (todaysAppointments.length === 0) {
+							todaysAppointmentsTableBody.innerHTML =
+								'<tr><td colspan="6">No appointments for today.</td></tr>';
+						} else {
+							todaysAppointments.forEach((appointment) => {
+								const row = document.createElement("tr");
+								row.innerHTML = `
                         <td>${appointment.appointment_id}</td>
                         <td>${appointment.patient_name}</td>
                         <td>${appointment.health_worker_name}</td>  <!-- Add health worker name -->
@@ -1084,26 +1691,26 @@ function fetchTodaysAppointments() {
                         <td>${appointment.time_slot}</td>
                         <td>${appointment.status}</td>
                     `;
-                    todaysAppointmentsTableBody.appendChild(row);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching appointments:', error);
-        });
-}
+								todaysAppointmentsTableBody.appendChild(row);
+							});
+						}
+					})
+					.catch((error) => {
+						console.error("Error fetching appointments:", error);
+					});
+			}
 
-fetchTodaysAppointments();
+			fetchTodaysAppointments();
 
+			document
+				.getElementById("logoutButton")
+				.addEventListener("click", function () {
+					// Perform any logout tasks you need, such as clearing session storage or cookies
+					// Example: sessionStorage.clear();  // Clears session data (if needed)
 
-document.getElementById("logoutButton").addEventListener("click", function() {
-    // Perform any logout tasks you need, such as clearing session storage or cookies
-    // Example: sessionStorage.clear();  // Clears session data (if needed)
-
-    // Redirect to staff-login.html
-    window.location.href = "staff-login.html";
-});
-
-    </script>
-</body>
+					// Redirect to staff-login.html
+					window.location.href = "staff-login.html";
+				});
+		</script>
+	</body>
 </html>
